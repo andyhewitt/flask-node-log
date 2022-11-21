@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="title">{% block title %} Nodes List {% endblock %}</h1>
+    <div class="content">
+        {% for node in nodes %}
+            <div class="node">
+                <a href="{{ url_for('nodes', node_id=node.id)}}">
+                {{ node.id }}
+                </a>
+                <b>
+                    <p class="name">{{ node.node }}</p>
+                </b>
+                <p>{{ node.count }}</p>
+                <p>{{ node.prometheus }}</p>
+                <p>Created at: {{ node.created_at }}</p>
+                <div class="bio">
+                    <h4>Summary</h4>
+                    <p>{{ node.Summary }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
