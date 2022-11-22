@@ -1,12 +1,12 @@
-import os,time
-from flask import Flask, render_template, request, url_for, redirect
+import os
+import requests
+from flask import Flask, render_template, request, current_app
 from flask_sqlalchemy import SQLAlchemy
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from sqlalchemy.sql import func
 
 os.environ['FLASK_DEBUG'] = 'True'
-
-app = Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,17 +17,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-node = [
-	"jpe2-caas1-prod1-node-000001",
-	"jpe2-caas1-prod1-node-000002",
-	"jpe2-caas1-prod1-node-000003",
-	"jpe2-caas1-prod1-node-000004",
-	"jpe2-caas1-prod1-node-000005",
-	"jpe2-caas1-prod1-node-000006",
-	"jpe2-caas1-prod1-node-000007",
-]
-
-
 
 class Node(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,36 +25,50 @@ class Node(db.Model):
     count = db.Column(db.Integer)
     created_at = db.Column(db.DateTime(timezone=True),
                            server_default=func.now())
+    is_current = db.Column(db.Boolean, default=False)
     Summary = db.Column(db.Text)
     histories = db.relationship('NotReadyRecord', backref='node', lazy=True)
 
-
     def __repr__(self):
         return f'<Node: {self.prometheus} {self.node}>'
-
-def addNodeRecords():
-    db.create_all()
-    for i in node:
-        _node = Node(
-            node=i,
-            prometheus=f"jpe2-caas1-prod1",
-            count=1,
-            Summary="First time",
-        )
-        db.session.add(_node)
-        db.session.commit()
 
 
 class NotReadyRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime(timezone=True),
-                        server_default=func.now())
+                           server_default=func.now())
     node_id = db.Column(db.Integer, db.ForeignKey('node.id'),
-        nullable=False)
+                        nullable=False)
 
     def __repr__(self):
         return f'<Node: {self.node_id} {self.id}>'
 
+
+def get_not_ready_list():
+    params = (
+        ('query',
+            ''),
+    )
+    req = app.test_request_context()
+    req.request
+    response = requests.get(
+        '', params=params)
+    response = response.json()
+
+    print(response)
+
+    return response
+
+
+def start_recording():
+    with app.app_context():
+        new_request = GetNodeStatus()
+        new_request.process_node()
+
+
+sched = BackgroundScheduler(daemon=True)
+sched.add_job(start_recording, 'interval', minutes=0.5)
+sched.start()
 
 
 @app.route('/')
@@ -80,9 +83,61 @@ def nodes(node_id):
     return render_template('nodes.html', node=node)
 
 
-# @app.route('/create/', methods=('GET', 'POST'))
+class GetNodeStatus():
+    def __init__(self) -> None:
+        self.curr = []
+
+    def client():
+        with app.test_client() as client:
+            with app.app_context():  # New!!
+                assert current_app.config["ENV"] == "production"
+            yield client
+
+    def get_not_ready_list(self):
+        params = (
+            ('query',
+             ''),
+        )
+        response = requests.get(
+            '/', params=params)
+        response = response.json()
+
+        return response
+
+    def process_node(self):
+        node_raw = self.get_not_ready_list()
+        nodes_in_db = Node.query.all()
+
+        for n in node_raw["data"]["result"]:
+            node = n["metric"]["node"]
+            prometheus = n["metric"]["prometheus"]
+            node_exists = Node.query.filter_by(node=node).first()
+            print(nodes_in_db)
+            # curr_node = CurrentNodes(
+            #     node=node,
+            #     prometheus=prometheus,
+            #     count=1,
+            #     Summary="",
+            # )
+            # db.session.add(curr_node)
+            # db.session.commit()
+            new_node = Node(
+                node=node,
+                prometheus=prometheus,
+                count=1,
+                Summary="",
+                is_current=True
+            )
+            db.session.add(new_node)
+            db.session.commit()
+        return self.curr
+
+    def register_current_not_ready(self):
+        node_raw = self.process_node()
+
+
 class PostClients():
-    def __init__(self, prometheus, node,summary) -> None:
+    def __init__(self, prometheus, node, summary) -> None:
         self.prometheus = prometheus
         self.node = node
         self.count = 1
@@ -93,9 +148,9 @@ class PostClients():
             prometheus = self.prometheus
             node = self.node
             node = Node(prometheus=prometheus,
-                           node=node,
-                           count=self.count,
-                           summary=self.summary)
+                        node=node,
+                        count=self.count,
+                        summary=self.summary)
             db.session.add(node)
             db.session.commit()
 
@@ -107,3 +162,7 @@ class PostClients():
 
             db.session.add(node)
             db.session.commit()
+
+
+if __name__ == '__main__':
+    app.run(debug=True, port=3001)
