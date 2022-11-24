@@ -25,8 +25,8 @@ class Node(db.Model):
     count = db.Column(db.Integer)
     created_at = db.Column(db.DateTime(timezone=True),
                            server_default=func.now())
-    is_current = db.Column(db.Boolean, default=False)
-    Summary = db.Column(db.Text)
+    current_not_ready = db.Column(db.Boolean, default=False, nullable=False)
+    summary = db.Column(db.Text)
     histories = db.relationship('NotReadyRecord', backref='node', lazy=True)
 
     def __repr__(self):
@@ -44,35 +44,21 @@ class NotReadyRecord(db.Model):
         return f'<Node: {self.node_id} {self.id}>'
 
 
-def get_not_ready_list():
-    params = (
-        ('query',
-            ''),
-    )
-    req = app.test_request_context()
-    req.request
-    response = requests.get(
-        '', params=params)
-    response = response.json()
-
-    print(response)
-
-    return response
-
-
 def start_recording():
     with app.app_context():
         new_request = GetNodeStatus()
         new_request.process_node()
 
 
-sched = BackgroundScheduler(daemon=True)
-sched.add_job(start_recording, 'interval', minutes=0.5)
-sched.start()
+# sched = BackgroundScheduler(daemon=True)
+# sched.add_job(start_recording, 'interval', minutes=0.5)
+# sched.start()
 
 
 @app.route('/')
 def index():
+    new_request = GetNodeStatus()
+    new_request.process_node()
     nodes = Node.query.all()
     return render_template('index.html', nodes=nodes)
 
@@ -84,9 +70,6 @@ def nodes(node_id):
 
 
 class GetNodeStatus():
-    def __init__(self) -> None:
-        self.curr = []
-
     def client():
         with app.test_client() as client:
             with app.app_context():  # New!!
@@ -94,12 +77,8 @@ class GetNodeStatus():
             yield client
 
     def get_not_ready_list(self):
-        params = (
-            ('query',
-             ''),
-        )
         response = requests.get(
-            '/', params=params)
+            'http://localhost:3000/sample')
         response = response.json()
 
         return response
@@ -107,30 +86,22 @@ class GetNodeStatus():
     def process_node(self):
         node_raw = self.get_not_ready_list()
         nodes_in_db = Node.query.all()
+        current_notready = Node.query.filter_by(current_not_ready=True).all()
+        print(current_notready)
 
         for n in node_raw["data"]["result"]:
             node = n["metric"]["node"]
             prometheus = n["metric"]["prometheus"]
             node_exists = Node.query.filter_by(node=node).first()
-            print(nodes_in_db)
-            # curr_node = CurrentNodes(
+            # new_node = Node(
             #     node=node,
             #     prometheus=prometheus,
             #     count=1,
-            #     Summary="",
+            #     summary="",
+            #     current_not_ready=True
             # )
-            # db.session.add(curr_node)
+            # db.session.add(new_node)
             # db.session.commit()
-            new_node = Node(
-                node=node,
-                prometheus=prometheus,
-                count=1,
-                Summary="",
-                is_current=True
-            )
-            db.session.add(new_node)
-            db.session.commit()
-        return self.curr
 
     def register_current_not_ready(self):
         node_raw = self.process_node()
