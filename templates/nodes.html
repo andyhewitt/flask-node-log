@@ -10,7 +10,6 @@
                 <b>
                     <p class="name">{{ node.node }}</p>
                 </b>
-                <p>{{ node.count }}</p>
                 <p>{{ node.prometheus }}</p>
                 <p>Record Created at: {{ node.created_at }}</p>
                 <div class="bio">
@@ -19,7 +18,6 @@
                     <h4>History</h3>
                     {% for record in node.histories %}
                         <div class="comment">
-                            <p>#{{ record.id }}</p>
                             <p>Incidence time: {{ record.created_at }}</p>
                         </div>
                     {% endfor %}

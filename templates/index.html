@@ -2,11 +2,33 @@
 
 {% block content %}
     <h1 class="title">{% block title %} Nodes List {% endblock %}</h1>
+    <div>
+        <br>
+        <h2>Current Not Ready</h2>
+        <div class="content">
+            {% for node in current_not_ready %}
+                <div class="node">
+                    <a href="{{ url_for('nodes', node_id=node.id)}}">
+                    Summary
+                    </a>
+                    <b>
+                        <p class="name">{{ node.node }}</p>
+                    </b>
+                    <p>{{ node.prometheus }}</p>
+                    <p>Created at: {{ node.created_at }}</p>
+                    <p>Not Ready Count: {{ node.count }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <br>
+    <h2>Not Ready History</h2>
     <div class="content">
         {% for node in nodes %}
             <div class="node">
                 <a href="{{ url_for('nodes', node_id=node.id)}}">
-                {{ node.id }}
+                Summary
                 </a>
                 <b>
                     <p class="name">{{ node.node }}</p>
@@ -16,7 +38,11 @@
                 <p>Created at: {{ node.created_at }}</p>
                 <div class="bio">
                     <h4>Summary</h4>
-                    <p>{{ node.summary }}</p>
+                    {% for record in node.histories %}
+                    <div class="comment">
+                        <p>Incidence time: {{ record.created_at }}</p>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         {% endfor %}

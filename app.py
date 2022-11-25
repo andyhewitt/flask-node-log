@@ -22,7 +22,6 @@ class Node(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     prometheus = db.Column(db.String(100), nullable=False)
     node = db.Column(db.String(100), nullable=False)
-    count = db.Column(db.Integer)
     created_at = db.Column(db.DateTime(timezone=True),
                            server_default=func.now())
     current_not_ready = db.Column(db.Boolean, default=False, nullable=False)
@@ -31,6 +30,10 @@ class Node(db.Model):
 
     def __repr__(self):
         return f'<Node: {self.prometheus} {self.node}>'
+
+    @property
+    def count(self):
+        return len(self.histories)
 
 
 class NotReadyRecord(db.Model):
@@ -50,17 +53,16 @@ def start_recording():
         new_request.process_node()
 
 
-# sched = BackgroundScheduler(daemon=True)
-# sched.add_job(start_recording, 'interval', minutes=0.5)
-# sched.start()
+sched = BackgroundScheduler(daemon=True)
+sched.add_job(start_recording, 'interval', minutes=0.5)
+sched.start()
 
 
 @app.route('/')
 def index():
-    new_request = GetNodeStatus()
-    new_request.process_node()
     nodes = Node.query.all()
-    return render_template('index.html', nodes=nodes)
+    current_not_ready = Node.query.filter_by(current_not_ready=True).all()
+    return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
 
 
 @app.route('/<int:node_id>/')
@@ -77,31 +79,67 @@ class GetNodeStatus():
             yield client
 
     def get_not_ready_list(self):
-        response = requests.get(
-            'http://localhost:3000/sample')
+        params = (
+            ('query', 'kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s-v2.*",status="true"}==0'),
+        )
+        response = requests.get('https://caas.mon-aas-api.r-local.net/prometheus/api/v1/query', params=params)
         response = response.json()
 
-        return response
+        return response["data"]["result"]
 
     def process_node(self):
-        node_raw = self.get_not_ready_list()
-        nodes_in_db = Node.query.all()
-        current_notready = Node.query.filter_by(current_not_ready=True).all()
-        print(current_notready)
+        new_nr_node = self.get_not_ready_list()
+        new_nr_node_list = []
+        for new_list in new_nr_node:
+            new_nr_node_list.append(new_list["metric"]["node"])
 
-        for n in node_raw["data"]["result"]:
-            node = n["metric"]["node"]
-            prometheus = n["metric"]["prometheus"]
-            node_exists = Node.query.filter_by(node=node).first()
-            # new_node = Node(
-            #     node=node,
-            #     prometheus=prometheus,
-            #     count=1,
-            #     summary="",
-            #     current_not_ready=True
-            # )
-            # db.session.add(new_node)
-            # db.session.commit()
+        # Get all the current not ready nodes on last check
+        prev_not_ready = Node.query.filter_by(current_not_ready=True).all()
+        # Step 1, update current not ready node.
+        for new_node in new_nr_node:
+            new_entered_node = new_node["metric"]["node"]
+            new_entered_node_prometheus = new_node["metric"]["prometheus"]
+
+            # Check if this node is already in the database and is currently not ready.
+            is_current_notready = Node.query.filter_by(current_not_ready=True, node=new_entered_node).first()
+
+            # Check if this node is in the database
+            is_not_ready_and_existing = Node.query.filter_by(node=new_entered_node).first()
+
+            # If this node is currently not ready, ignore
+            if is_current_notready is not None:
+                # Ignore this one because it is a ongoing alert
+                print("Still ongoing", is_current_notready.node)
+            # Else, update db if db has record, or create a new record
+            else:
+                if is_not_ready_and_existing is not None:
+                    print("Existing ", new_entered_node)
+                    is_not_ready_and_existing.current_not_ready = True
+                    record = NotReadyRecord(node=is_not_ready_and_existing)
+                    db.session.add(is_not_ready_and_existing)
+                    db.session.add(record)
+                    db.session.commit()
+                else:
+                    print("New node", new_entered_node)
+                    new_node = Node(
+                        node=new_entered_node,
+                        prometheus=new_entered_node_prometheus,
+                        summary="",
+                        current_not_ready=True
+                    )
+                    record = NotReadyRecord(node=new_node)
+                    db.session.add(new_node)
+                    db.session.add(record)
+                    db.session.commit()
+
+        # Set resolved node to false and also update record
+        # print(new_nr_node_list)
+        for cr_node in prev_not_ready:
+            if cr_node.node not in new_nr_node_list:
+                print("Resolved ", cr_node.node)
+                cr_node.current_not_ready = False
+                db.session.add(cr_node)
+                db.session.commit()
 
     def register_current_not_ready(self):
         node_raw = self.process_node()
