@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-node-log-svc
+  namespace: caas-system
+spec:
+  ports:
+  - name: http-metrics
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: flask-node-log
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: flask-node-log
+  name: flask-node-log
+  namespace: caas-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-node-log
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: flask-node-log
+    spec:
+      containers:
+      - image: registry-jpe2-beta.r-local.net/caas-common/flask-app:v20221125-4
+        name: flask-node-log
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "800m"
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      imagePullSecrets:
+      - name: harbor-bot
+      dnsPolicy: ClusterFirst

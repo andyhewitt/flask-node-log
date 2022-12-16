@@ -1,10 +1,22 @@
+from sqlalchemy.sql import func
 import os
+import re
+import time
 import requests
 from flask import Flask, render_template, request, current_app
 from flask_sqlalchemy import SQLAlchemy
 from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import datetime
 
-from sqlalchemy.sql import func
+import pytz
+
+UTC = pytz.utc
+
+IST = pytz.timezone('Asia/Tokyo')
+
+datetime_ist = datetime.now(IST)
+print(datetime_ist.strftime('%Y-%m-%d %H:%M:%S'))
+
 
 os.environ['FLASK_DEBUG'] = 'True'
 
@@ -35,6 +47,11 @@ class Node(db.Model):
     def count(self):
         return len(self.histories)
 
+    @property
+    def creation_time(self):
+        dt_jp = self.created_at.astimezone(pytz.timezone('Asia/Tokyo'))
+        return dt_jp.strftime("%Y-%m-%d %H:%M:%S %Z %z")
+
 
 class NotReadyRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -45,6 +62,11 @@ class NotReadyRecord(db.Model):
 
     def __repr__(self):
         return f'<Node: {self.node_id} {self.id}>'
+
+    @property
+    def creation_time(self):
+        dt_jp = self.created_at.astimezone(pytz.timezone('Asia/Tokyo'))
+        return dt_jp.strftime("%Y-%m-%d %H:%M:%S %Z %z")
 
 
 def start_recording():
@@ -71,6 +93,17 @@ def nodes(node_id):
     return render_template('nodes.html', node=node)
 
 
+@app.route('/healthz')
+def healthz():
+    return "OK"
+
+
+@app.route('/healthx')
+def healthx():
+    time.sleep(1)
+    return "OK"
+
+
 class GetNodeStatus():
     def client():
         with app.test_client() as client:
@@ -80,9 +113,11 @@ class GetNodeStatus():
 
     def get_not_ready_list(self):
         params = (
-            ('query', 'kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s-v2.*",status="true"}==0'),
+            ('query',
+             'kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s-v2.*",status="true"}==0'),
         )
-        response = requests.get('https://caas.mon-aas-api.r-local.net/prometheus/api/v1/query', params=params)
+        response = requests.get(
+            'https://caas.mon-aas-api.r-local.net/prometheus/api/v1/query', params=params)
         response = response.json()
 
         return response["data"]["result"]
@@ -98,13 +133,18 @@ class GetNodeStatus():
         # Step 1, update current not ready node.
         for new_node in new_nr_node:
             new_entered_node = new_node["metric"]["node"]
-            new_entered_node_prometheus = new_node["metric"]["prometheus"]
+            # new_entered_node_prometheus = new_node["metric"]["prometheus"]
+            # print(new_entered_node_prometheus)
+            new_entered_node_prometheus = re.search(r'([a-z]{1,}[0-9]{1}-[a-z]{1,}[0-9]{1}-[a-z]{1,}[0-9])', new_node["metric"]["prometheus"]).group(1)
+            
 
             # Check if this node is already in the database and is currently not ready.
-            is_current_notready = Node.query.filter_by(current_not_ready=True, node=new_entered_node).first()
+            is_current_notready = Node.query.filter_by(
+                current_not_ready=True, node=new_entered_node).first()
 
             # Check if this node is in the database
-            is_not_ready_and_existing = Node.query.filter_by(node=new_entered_node).first()
+            is_not_ready_and_existing = Node.query.filter_by(
+                node=new_entered_node).first()
 
             # If this node is currently not ready, ignore
             if is_current_notready is not None:
