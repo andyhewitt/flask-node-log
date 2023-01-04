@@ -14,10 +14,6 @@ UTC = pytz.utc
 
 IST = pytz.timezone('Asia/Tokyo')
 
-datetime_ist = datetime.now(IST)
-print(datetime_ist.strftime('%Y-%m-%d %H:%M:%S'))
-
-
 os.environ['FLASK_DEBUG'] = 'True'
 
 basedir = os.path.abspath(os.path.dirname(__file__))

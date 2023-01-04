@@ -2,45 +2,69 @@
 
 {% block content %}
 <div>
-    <h2>Current Not Ready</h2>
-    <div class="content">
-        {% for node in current_not_ready %}
-        <div class="node">
-            <a href="{{ url_for('nodes', node_id=node.id)}}">
-                Summary
-            </a>
-            <b>
-                <p class="name">{{ node.node }}</p>
-            </b>
-            <p>Not Ready Count: {{ node.count }}</p>
+    <h2>Current Not Ready Nodes</h2>
+    <div class="container mt-5 mb-3">
+        <div class="row">
+            {% for node in current_not_ready %}
+            <div class="col-md-4">
+                <div class="card p-3 mb-2">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex flex-row align-items-center">
+                            <div class="mb-0">
+                                <div class="mb-0">
+                                    <b>
+                                        <p class="h6">{{ node.node }}</p>
+                                    </b>
+                                </div>
+                                <div class="mb-0">
+                                    <p class="h6">Not Ready Count: {{ node.count }}</p>
+                                </div>
+                                <a class="h3 btn btn-primary" href="{{ url_for('nodes', node_id=node.id)}}">Summary</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </div>
 
 <div>
     <h2>Not Ready History</h2>
-    <div class="content">
+    <div class="container mt-5 mb-3">
+        <div class="row">
         {% for node in nodes %}
-        <div class="node">
-            <a href="{{ url_for('nodes', node_id=node.id)}}">
-                Summary
-            </a>
-            <b>
-                <p class="name">{{ node.node }}</p>
-            </b>
-            <p>{{ node.prometheus }}</p>
-            <p>Not Ready Count: {{ node.count }}</p>
-            <div class="bio">
-                <h4>Summary</h4>
-                {% for record in node.histories %}
-                <div class="comment">
-                    <p>Incidence time: {{ record.creation_time }}</p>
+        <div class="col-md-4">
+            <div class="card p-3 mb-2">
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex flex-row align-items-center">
+                        <b>
+                            <p class="name">{{ node.node }}</p>
+                        </b>
+                        <p>{{ node.prometheus }}</p>
+                        <p>Not Ready Count: {{ node.count }}</p>
+                    </div>
                 </div>
-                {% endfor %}
-            </div>
+            <!-- <div class="mb-0">
+                <p>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        history data
+                    </button>
+                </p>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                        <h4>Summary</h4>
+                        {% for record in node.histories %}
+                        <p>Incidence time: {{ record.creation_time }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div> -->
         </div>
         {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}
