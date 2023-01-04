@@ -72,7 +72,7 @@ def start_recording():
 
 
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(start_recording, 'interval', minutes=0.5)
+sched.add_job(start_recording, 'interval', minutes=1)
 sched.start()
 
 
@@ -88,6 +88,11 @@ def nodes(node_id):
     node = Node.query.get_or_404(node_id)
     return render_template('nodes.html', node=node)
 
+@app.route('/<string:prometheus_region>/')
+def nodes_by_prometheus(prometheus_region):
+    current_not_ready = Node.query.filter_by(prometheus=prometheus_region, current_not_ready=True).all()
+    nodes = Node.query.filter_by(prometheus=prometheus_region)
+    return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
 
 @app.route('/healthz')
 def healthz():
