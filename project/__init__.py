@@ -14,7 +14,7 @@ migrate = Migrate()
 def create_app(script_info=None):
 
     # instantiate the app
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder="../templates")
 
     # enable CORS
     CORS(app)
@@ -23,13 +23,19 @@ def create_app(script_info=None):
     # app_settings = os.getenv('APP_SETTINGS')
     # app.config.from_object(app_settings)
 
+    basedir = os.path.abspath(os.path.dirname(__file__))
+
+    app.config['SQLALCHEMY_DATABASE_URI'] =\
+        'sqlite:///' + os.path.join(basedir, 'database.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
     # set up extensions
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # # register blueprints
-    # from project.api.books import books_blueprint
-    # app.register_blueprint(books_blueprint)
+    # register blueprints
+    from project.api.nodes import nodes_blueprint
+    app.register_blueprint(nodes_blueprint)
 
     # # shell context for flask cli
     # @app.shell_context_processor

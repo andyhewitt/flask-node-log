@@ -1,9 +1,10 @@
-from project import app
 from flask import request, current_app
 from project.api.models import Node, NotReadyRecord
-from project import db, app
+from project import db, create_app
 import requests
 import re
+
+app = create_app()
 
 
 class GetNodeStatus():

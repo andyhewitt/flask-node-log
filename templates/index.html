@@ -12,10 +12,10 @@
                         <div class="d-flex flex-row align-items-center">
                             <div class="mb-0 text-wrap">
                                 <div class="mb-0">
-                                    <a class="h5 btn btn-outline-danger" href="{{ url_for('nodes', node_id=node.id)}}">{{ node.node }}</a>
+                                    <a class="h5 btn btn-outline-danger" href="{{ url_for('nodes.nodes', node_id=node.id)}}">{{ node.node }}</a>
                                 </div>
                                 <div class="mb-0">
-                                    <a class="badge p-0 text-decoration-none" href="{{ url_for('nodes_by_prometheus', prometheus_region=node.prometheus)}}"> <span>{{ node.prometheus }}</span> </a>
+                                    <a class="badge p-0 text-decoration-none" href="{{ url_for('nodes.nodes_by_prometheus', prometheus_region=node.prometheus)}}"> <span>{{ node.prometheus }}</span> </a>
                                 </div>
                                 <div class="mb-0">
                                     <p class="h6">Not Ready Count: {{ node.count }}</p>
@@ -41,10 +41,10 @@
                         <div class="d-flex flex-row align-items-center">
                             <div class="mb-0">
                                 <div class="mb-0">
-                                    <a class="h5 btn btn-outline-info" href="{{ url_for('nodes', node_id=node.id)}}">{{ node.node }}</a> 
+                                    <a class="h5 btn btn-outline-info" href="{{ url_for('nodes.nodes', node_id=node.id)}}">{{ node.node }}</a> 
                                 </div>
                                 <div class="mb-0">
-                                    <a class="badge p-0 text-decoration-none" href="{{ url_for('nodes_by_prometheus', prometheus_region=node.prometheus)}}"> <span>{{ node.prometheus }}</span> </a>
+                                    <a class="badge p-0 text-decoration-none" href="{{ url_for('nodes.nodes_by_prometheus', prometheus_region=node.prometheus)}}"> <span>{{ node.prometheus }}</span> </a>
                                 </div>
                                 <div class="mb-0">
                                     <p class="h6">Not Ready Count: {{ node.count }}</p>
