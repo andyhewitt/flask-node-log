@@ -14,7 +14,7 @@ migrate = Migrate()
 def create_app(script_info=None):
 
     # instantiate the app
-    app = Flask(__name__, template_folder="../templates")
+    app = Flask(__name__, template_folder="templates")
 
     # enable CORS
     CORS(app)
@@ -23,10 +23,12 @@ def create_app(script_info=None):
     # app_settings = os.getenv('APP_SETTINGS')
     # app.config.from_object(app_settings)
 
-    basedir = os.path.abspath(os.path.dirname(__file__))
+    # basedir = os.path.abspath(os.path.dirname(__file__))
 
-    app.config['SQLALCHEMY_DATABASE_URI'] =\
-        'sqlite:///' + os.path.join(basedir, 'database.db')
+    POSTGRES_USER = os.environ.get('POSTGRES_USER')
+    POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres:5432/nodes'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # set up extensions

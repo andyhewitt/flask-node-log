@@ -4,6 +4,9 @@ import pytz
 
 
 class Node(db.Model):
+
+    __tablename__ = 'nodes'
+
     id = db.Column(db.Integer, primary_key=True)
     prometheus = db.Column(db.String(100), nullable=False)
     node = db.Column(db.String(100), nullable=False)
@@ -27,6 +30,9 @@ class Node(db.Model):
 
 
 class NotReadyRecord(db.Model):
+
+    __tablename__ = 'notreadyrecords'
+
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime(timezone=True),
                            server_default=func.now())

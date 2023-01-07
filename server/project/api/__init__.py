@@ -8,11 +8,11 @@ app = create_app()
 
 
 class GetNodeStatus():
-    def client():
-        with app.test_client() as client:
-            with app.app_context():  # New!!
-                assert current_app.config["ENV"] == "production"
-            yield client
+    # def client():
+    #     with app.test_client() as client:
+    #         with app.app_context():  # New!!
+    #             assert current_app.config["ENV"] == "production"
+    #         yield client
 
     def get_not_ready_list(self):
         params = (
