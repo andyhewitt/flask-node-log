@@ -23,13 +23,19 @@ def create_app(script_info=None):
     # app_settings = os.getenv('APP_SETTINGS')
     # app.config.from_object(app_settings)
 
-    # basedir = os.path.abspath(os.path.dirname(__file__))
+    basedir = os.path.abspath(os.path.dirname(__file__))
 
-    POSTGRES_USER = os.environ.get('POSTGRES_USER')
-    POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+    # POSTGRES_USER = os.environ.get('POSTGRES_USER')
+    # POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+    POSTGRES_USER = 'postgres'
+    POSTGRES_PASSWORD = 'postgres'
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres:5432/nodes'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@localhost:5432'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # app.config['SQLALCHEMY_DATABASE_URI'] =\
+    #     'sqlite:///' + os.path.join(basedir, 'database.db')
+    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # set up extensions
     db.init_app(app)

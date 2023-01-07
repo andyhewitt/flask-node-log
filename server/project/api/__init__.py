@@ -20,7 +20,7 @@ class GetNodeStatus():
              'kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s-v2.*",status="true"}==0'),
         )
         response = requests.get(
-            'https://example.net/prometheus/api/v1/query', params=params)
+            'http://localhost:3000/sample', params=params)
         response = response.json()
 
         return response["data"]["result"]

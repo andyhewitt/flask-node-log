@@ -23,6 +23,6 @@ def start_recording():
 
 if __name__ == '__main__':
     sched = BackgroundScheduler(daemon=True)
-    sched.add_job(start_recording, 'interval', minutes=1)
+    sched.add_job(start_recording, 'interval', minutes=0.3)
     sched.start()
     app.run(debug=True, port=3001)

@@ -4,20 +4,20 @@
 			"result": [
 				{
 					"metric": {
-						"node": "jpe2-caas1-prod1-node-000000",
-						"prometheus": "jpe2-caas1-prod1"
+						"node": "jpe2-caas1-prod2-node-000149.caas.jpe2c.dcnw.rakuten",
+						"prometheus": "jpe2-caas1-prod2-k8s"
 					}
 				},
 				{
 					"metric": {
-						"node": "jpe2-caas1-prod1-node-000001",
-						"prometheus": "jpe2-caas1-prod1"
+						"node": "jpe2-caas1-prod1-node-000653.caas.jpe2b.dcnw.rakuten",
+						"prometheus": "jpe2-caas1-prod1-k8s"
 					}
 				},
 				{
 					"metric": {
-						"node": "jpe2-caas1-prod1-node-000002",
-						"prometheus": "jpe2-caas1-prod1"
+						"node": "use1-caas1-prod1-node-000005.caas.use1a.dcnw.rakuten",
+						"prometheus": "use1-caas1-prod1-k8s"
 					}
 				}
 			]
