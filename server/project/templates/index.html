@@ -59,7 +59,7 @@
                                     <div class="collapse" id="collapse-{{node.id}}">
                                         <div class="card card-body">
                                             <h4>Incidence time</h4>
-                                            {% for record in node.histories %}
+                                            {% for record in node.records %}
                                             <p class="h6">{{ record.creation_time }}</p>
                                             {% endfor %}
                                         </div>

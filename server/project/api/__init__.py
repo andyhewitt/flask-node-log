@@ -1,5 +1,5 @@
-from flask import request, current_app
-from project.api.models import Node, NotReadyRecord
+from flask import request
+from project.api.models import Node, Record
 from project import db, create_app
 import requests
 import re
@@ -8,11 +8,6 @@ app = create_app()
 
 
 class GetNodeStatus():
-    # def client():
-    #     with app.test_client() as client:
-    #         with app.app_context():  # New!!
-    #             assert current_app.config["ENV"] == "production"
-    #         yield client
 
     def get_not_ready_list(self):
         params = (
@@ -58,7 +53,7 @@ class GetNodeStatus():
                 if is_not_ready_and_existing is not None:
                     print("Existing ", new_entered_node)
                     is_not_ready_and_existing.current_not_ready = True
-                    record = NotReadyRecord(node=is_not_ready_and_existing)
+                    record = Record(nodes=is_not_ready_and_existing)
                     db.session.add(is_not_ready_and_existing)
                     db.session.add(record)
                     db.session.commit()
@@ -70,7 +65,7 @@ class GetNodeStatus():
                         summary="",
                         current_not_ready=True
                     )
-                    record = NotReadyRecord(node=new_node)
+                    record = Record(nodes=new_node)
                     db.session.add(new_node)
                     db.session.add(record)
                     db.session.commit()

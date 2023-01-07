@@ -20,17 +20,17 @@ def create_app(script_info=None):
     CORS(app)
 
     # # set config
-    # app_settings = os.getenv('APP_SETTINGS')
+    # app_settings = os.getenv("APP_SETTINGS", "config.DevelopmentConfig")
     # app.config.from_object(app_settings)
 
-    basedir = os.path.abspath(os.path.dirname(__file__))
+    # basedir = os.path.abspath(os.path.dirname(__file__))
 
-    # POSTGRES_USER = os.environ.get('POSTGRES_USER')
-    # POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+    # # POSTGRES_USER = os.environ.get('POSTGRES_USER')
+    # # POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
     POSTGRES_USER = 'postgres'
     POSTGRES_PASSWORD = 'postgres'
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@localhost:5432'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@localhost:5432/nodes'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # app.config['SQLALCHEMY_DATABASE_URI'] =\
