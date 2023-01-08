@@ -19,25 +19,9 @@ def create_app(script_info=None):
     # enable CORS
     CORS(app)
 
-    # # set config
-    # app_settings = os.getenv("APP_SETTINGS", "config.DevelopmentConfig")
-    # app.config.from_object(app_settings)
-
-
-    # # POSTGRES_USER = os.environ.get('POSTGRES_USER')
-    # # POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
-    POSTGRES_USER = 'postgres'
-    POSTGRES_PASSWORD = 'postgres'
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@localhost:5432/nodes'
-
-
-    # basedir = os.path.abspath(os.path.dirname(__file__))
-    # app.config['SQLALCHEMY_DATABASE_URI'] =\
-    #     'sqlite:///' + os.path.join(basedir, 'database.db')
-
-
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    # set config
+    app_settings = os.getenv("APP_SETTINGS", "project.config.TestingConfig")
+    app.config.from_object(app_settings)
 
     # set up extensions
     db.init_app(app)

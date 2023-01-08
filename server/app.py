@@ -1,7 +1,5 @@
-from sqlalchemy.sql import func
-import os
 from apscheduler.schedulers.background import BackgroundScheduler
-from project import create_app, db
+from project import create_app
 from project.api import GetNodeStatus
 
 import pytz
@@ -9,8 +7,6 @@ import pytz
 UTC = pytz.utc
 
 IST = pytz.timezone('Asia/Tokyo')
-
-os.environ['FLASK_DEBUG'] = 'False'
 
 app = create_app()
 
