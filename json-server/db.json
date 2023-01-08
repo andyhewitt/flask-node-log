@@ -16,7 +16,7 @@
 				},
 				{
 					"metric": {
-						"node": "use1-caas1-prod1-node-000005.caas.use1a.dcnw.rakuten",
+						"node": "use1-caas1-prod1-node-000004.caas.use1a.dcnw.rakuten",
 						"prometheus": "use1-caas1-prod1-k8s"
 					}
 				}

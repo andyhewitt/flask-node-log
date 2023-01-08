@@ -17,7 +17,7 @@
             <h4>History</h3>
                 {% for record in node.records %}
                 <div class="h6">
-                    <p>Incidence time: {{ record.creation_time }}</p>
+                    <p>Incidence time: {{ record.creation_time }}<span><a class="badge p-1 text-decoration-none" href="{{ url_for('nodes.delete', node_id=node.id, record_id=record.id) }}"> <span>Delete</span> </a></span></p>
                 </div>
                 {% endfor %}
         </div>

@@ -18,6 +18,13 @@
                                     <a class="badge p-0 text-decoration-none" href="{{ url_for('nodes.nodes_by_prometheus', prometheus_region=node.prometheus)}}"> <span>{{ node.prometheus }}</span> </a>
                                 </div>
                                 <div class="mb-0">
+                                    {% if node.reported == true %}
+                                        <a class="badge p-0 text-decoration-none" href="{{ url_for('nodes.reported', node_id=node.id)}}"><i class="bi bi-flag" style="font-size: 1rem; color: cornflowerblue;"></i></a>
+                                    {% else %}
+                                        <a class="badge p-0 text-decoration-none" href="{{ url_for('nodes.reported', node_id=node.id)}}"><i class="bi bi-flag-fill" style="font-size: 1rem; color: indianred;"></i></a>
+                                    {% endif %}
+                                </div>
+                                <div class="mb-0">
                                     <p class="h6">Not Ready Count: {{ node.count }}</p>
                                 </div>
                             </div>

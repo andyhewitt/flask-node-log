@@ -13,6 +13,7 @@ class Node(db.Model):
     created_at = db.Column(db.DateTime(timezone=True),
                            server_default=func.now())
     current_not_ready = db.Column(db.Boolean, default=False, nullable=False)
+    reported = db.Column(db.Boolean, default=False, nullable=False)
     summary = db.Column(db.Text)
     records = db.relationship('Record', backref="nodes", lazy=True)
 
