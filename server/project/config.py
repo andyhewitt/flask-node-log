@@ -2,9 +2,9 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-POSTGRES_USER = os.environ.get('POSTGRES_USER')
-POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
-DATABASE_URL = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres:5432/books'
+# POSTGRES_USER = os.environ.get('POSTGRES_USER')
+# POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+# DATABASE_URL = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres:5432/nodes'
 
 
 class BaseConfig:
@@ -16,12 +16,12 @@ class BaseConfig:
 
 class DevelopmentConfig(BaseConfig):
     """Development configuration"""
-    SQLALCHEMY_DATABASE_URI = DATABASE_URL
+    # SQLALCHEMY_DATABASE_URI = DATABASE_URL
 
 
 class ProductionConfig(BaseConfig):
     """Production configuration"""
-    SQLALCHEMY_DATABASE_URI = DATABASE_URL
+    # SQLALCHEMY_DATABASE_URI = DATABASE_URL
 
 class TestingConfig(BaseConfig):
     TESTING = True

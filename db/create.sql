@@ -1,2 +1,1 @@
 CREATE DATABASE nodes;
-CREATE DATABASE records;

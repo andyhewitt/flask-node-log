@@ -6,7 +6,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
     ports:
-      - 5001:5000
+      - 8080:8080
     environment:
       # - FLASK_ENV=development
       # - APP_SETTINGS=project.config.DevelopmentConfig
@@ -24,3 +24,14 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+
+  json-server:
+    build: 
+      context: ./json-server
+      dockerfile: Dockerfile
+    # container_name: test-json-server
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./json-server/db.json:/data/db.json
+    command: json-server --watch db.json --host 0.0.0.0

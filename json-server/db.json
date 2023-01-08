@@ -10,7 +10,7 @@
 				},
 				{
 					"metric": {
-						"node": "jpe2-caas1-prod1-node-000653.caas.jpe2b.dcnw.rakuten",
+						"node": "jpe2-caas1-prod1-node-001653.caas.jpe2b.dcnw.rakuten",
 						"prometheus": "jpe2-caas1-prod1-k8s"
 					}
 				},
