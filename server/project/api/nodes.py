@@ -1,6 +1,6 @@
 from project.api.models import Node, Record
 from project import db
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 import time
 
 from flask import Blueprint
@@ -40,11 +40,20 @@ def delete(node_id, record_id):
 @nodes_blueprint.route('/<int:node_id>/reported/')
 def reported(node_id):
     node = Node.query.get_or_404(node_id)
-    print(node.reported)
     node.reported = not node.reported
-    print(node.reported)
     db.session.commit()
     return redirect(url_for('nodes.index'))
+
+
+@nodes_blueprint.route('/<int:node_id>/summary/', methods=('GET', 'POST'))
+def summary(node_id):
+    node = Node.query.get_or_404(node_id)
+    if request.method == 'POST':
+        summary = request.form['summary']
+        node.summary = summary
+        db.session.commit()
+
+        return redirect(url_for('nodes.nodes', node_id=node_id))
 
 
 @nodes_blueprint.route('/healthz')

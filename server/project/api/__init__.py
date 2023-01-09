@@ -87,7 +87,6 @@ class PostClients():
     def __init__(self, prometheus, node, summary) -> None:
         self.prometheus = prometheus
         self.node = node
-        self.count = 1
         self.summary = ""
 
     def create(self):
@@ -96,7 +95,6 @@ class PostClients():
             node = self.node
             node = Node(prometheus=prometheus,
                         node=node,
-                        count=self.count,
                         summary=self.summary)
             db.session.add(node)
             db.session.commit()
@@ -105,7 +103,6 @@ class PostClients():
         node = Node.query.get_or_404(node_id)
 
         if request.method == 'POST':
-            node.count = self.count + 1
 
             db.session.add(node)
             db.session.commit()

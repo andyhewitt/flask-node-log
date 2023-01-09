@@ -12,12 +12,12 @@
         <p>{{ node.prometheus }}</p>
         <p>Record Created at: {{ node.creation_time }}</p>
         <div class="h6">
-            <form action="{{ url_for('nodes.nodes', node_id=node.id) }}" method="post">
+            <form action="{{ url_for('nodes.summary', node_id=node.id) }}" method="post">
                 <div class="mb-3">
-                    <input autofocus class="form-control" type="text" name="comment" placeholder="Please Type Your Comment Here" required>
+                    <input autofocus class="form-control" type="text" name="summary" placeholder="Please Type Your Comment Here" required>
                 </div>
                 <div class="mb-3">
-                    <input class="btn btn-primary" type="submit" value="Comment">
+                    <input class="btn btn-primary" type="submit" value="Summary">
                 </div>
             </form>
             <h4>Summary</h4>
