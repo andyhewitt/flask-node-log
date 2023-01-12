@@ -14,6 +14,8 @@ class Node(db.Model):
                            server_default=func.now())
     current_not_ready = db.Column(db.Boolean, default=False, nullable=False)
     reported = db.Column(db.Boolean, default=False, nullable=False)
+    schedulable = db.Column(db.Boolean, nullable=False)
+    region = db.Column(db.String(100), nullable=False)
     summary = db.Column(db.Text)
     records = db.relationship('Record', backref="nodes", lazy=True)
 

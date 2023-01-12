@@ -13,10 +13,10 @@ class GetNodeStatus():
     def get_not_ready_list(self):
         params = (
             ('query',
-             'kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s.*",status="true"}==0'),
+             'sum by (node, prometheus) (kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s.*",status="true"}==0) + on(node, prometheus) kube_node_spec_unschedulable'),
         )
         response = requests.get(
-            'http://localhost:3000/sample', params=params)
+            'https://caas.qa-mon-aas-api.r-local.net/prometheus/api/v1/query', params=params)
         response = response.json()
 
         return response["data"]["result"]
@@ -32,10 +32,11 @@ class GetNodeStatus():
         # Step 1, update current not ready node.
         for new_node in new_nr_node:
             new_entered_node = new_node["metric"]["node"]
-            # new_entered_node_prometheus = new_node["metric"]["prometheus"]
-            # print(new_entered_node_prometheus)
+            region = new_entered_node.split('.')[2]
+
             new_entered_node_prometheus = re.search(
                 r'([a-z]{1,}[0-9]{1}-[a-z]{1,}[0-9]{1}-[a-z]{1,}[0-9])', new_node["metric"]["prometheus"]).group(1)
+            scheduling_status = False if new_node["value"][1] == "1" else True
 
             # Check if this node is already in the database and is currently not ready.
             is_current_notready = Node.query.filter_by(
@@ -62,6 +63,8 @@ class GetNodeStatus():
                     logging.info(f"New node {new_entered_node}")
                     new_node = Node(
                         node=new_entered_node,
+                        region=region,
+                        schedulable= scheduling_status,
                         prometheus=new_entered_node_prometheus,
                         summary="",
                         current_not_ready=True
@@ -82,6 +85,8 @@ class GetNodeStatus():
 
     def register_current_not_ready(self):
         node_raw = self.process_node()
+
+
 
 
 class PostClients():

@@ -20,12 +20,17 @@
                     <input class="btn btn-primary" type="submit" value="Summary">
                 </div>
             </form>
+            {% if node.schedulable == false %}
+                <p class="h6"><span><a class="badge text-decoration-none" href="#"><span>{{ bmaas_id }}</span></a></span></p>
+            {% else %}
+                <p class="h6"><span><a class="badge text-decoration-none" href="#"><span>Method not allowed, please drain the node first.</span></a></span></p>
+            {% endif %}            
             <h4>Summary</h4>
             <p>{{ node.summary }}</p>
             <h4>History</h3>
                 {% for record in node.records %}
                 <div class="h6">
-                    <p>Incidence time: {{ record.creation_time }}<span><a class="badge p-1 text-decoration-none" href="{{ url_for('nodes.delete', node_id=node.id, record_id=record.id) }}"> <span>Delete</span> </a></span></p>
+                    <p>Incidence time: {{ record.creation_time }}<span><a class="badge p-1 text-decoration-none danger" href="{{ url_for('nodes.delete', node_id=node.id, record_id=record.id) }}"> <span>Delete</span> </a></span></p>
                 </div>
                 {% endfor %}
         </div>

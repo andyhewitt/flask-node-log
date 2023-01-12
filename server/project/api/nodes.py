@@ -1,4 +1,5 @@
 from project.api.models import Node, Record
+from project.api.reboot_client import RebootClient
 from project import db
 from flask import render_template, redirect, url_for, request
 import time
@@ -17,15 +18,31 @@ def index():
 
 @nodes_blueprint.route('/<int:node_id>/')
 def nodes(node_id):
+    reboot_client = RebootClient()
     node = Node.query.get_or_404(node_id)
-    return render_template('nodes.html', node=node)
+    bmaas_id = reboot_client.get_token(node.node.split('.')[0], node.region)
+    return render_template('nodes.html', node=node, bmaas_id=bmaas_id)
 
 
-@nodes_blueprint.route('/<string:prometheus_region>/')
-def nodes_by_prometheus(prometheus_region):
+@nodes_blueprint.route('/cluster/<string:cluster>/')
+def nodes_by_prometheus(cluster):
     current_not_ready = Node.query.filter_by(
-        prometheus=prometheus_region, current_not_ready=True).all()
-    nodes = Node.query.filter_by(prometheus=prometheus_region)
+        prometheus=cluster, current_not_ready=True).all()
+    nodes = Node.query.filter_by(prometheus=cluster)
+    return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
+
+@nodes_blueprint.route('/region/<string:region>/')
+def nodes_by_region(region):
+    current_not_ready = Node.query.filter_by(
+        region=region, current_not_ready=True).all()
+    nodes = Node.query.filter_by(region=region)
+    return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
+
+@nodes_blueprint.route('/schedulable/<string:schedulable>/')
+def nodes_by_schedulable(schedulable):
+    current_not_ready = Node.query.filter_by(
+        schedulable=True if schedulable == "True" else False, current_not_ready=True).all()
+    nodes = Node.query.filter_by(schedulable=schedulable)
     return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
 
 
