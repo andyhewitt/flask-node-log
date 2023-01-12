@@ -21,7 +21,7 @@
                 </div>
             </form>
             {% if node.schedulable == false %}
-                <p class="h6"><span><a class="badge text-decoration-none" href="#"><span>{{ bmaas_id }}</span></a></span></p>
+                <p class="h6"><span><a class="badge text-decoration-none" href="{{ bmaas_id }}""><span>{{ bmaas_id }}</span></a></span></p>
             {% else %}
                 <p class="h6"><span><a class="badge text-decoration-none" href="#"><span>Method not allowed, please drain the node first.</span></a></span></p>
             {% endif %}            

@@ -10,7 +10,6 @@ IST = pytz.timezone('Asia/Tokyo')
 
 app = create_app()
 
-
 def start_recording():
     with app.app_context():
         new_request = GetNodeStatus()

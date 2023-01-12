@@ -8,32 +8,40 @@
             {% for node in current_not_ready %}
             <div class="col-md-4">
                 <div class="card p-3 mb-2">
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex flex-row align-items-center">
-                            <div class="mb-0">
-                                <div class="mb-0 text-wrap">
-                                    <a class="h5 btn btn-outline-danger" href="{{ url_for('nodes.nodes', node_id=node.id)}}">{{ node.node }}</a>
-                                </div>
-                                <div class="mb-0">
-                                    <p class="h6">Cluster: <a class="badge ps-0 text-decoration-none" href="{{ url_for('nodes.nodes_by_prometheus', cluster=node.prometheus)}}"> <span>{{ node.prometheus }}</span></a></p>
-                                </div>
-                                <div class="mb-0">
-                                    <p class="h6">Region: <a class="badge ps-0 text-decoration-none" href="{{ url_for('nodes.nodes_by_region', region=node.region)}}"> <span>{{ node.region }}</span></a></p>
-                                </div>
-                                <div class="mb-0">
-                                    <p class="h6">Schedulable: <a class="badge ps-0 text-decoration-none" href="{{ url_for('nodes.nodes_by_schedulable', schedulable=node.schedulable)}}"> <span>{{ node.schedulable }}</span></a></p>
-                                </div>
-                                <div class="mb-0">
-                                    {% if node.reported == false %}
-                                        <p class="h6">Reported: <span><a class="badge text-decoration-none" href="{{ url_for('nodes.reported', node_id=node.id)}}"><i class="bi bi-flag" style="font-size: 1rem; color: #4e73e5;"></i></a></span></p>
-                                    {% else %}
-                                        <p class="h6">Reported: <span><a class="badge text-decoration-none" href="{{ url_for('nodes.reported', node_id=node.id)}}"><i class="bi bi-flag-fill" style="font-size: 1rem; color: indianred;"></i></a></span></p>
-                                    {% endif %}
-                                </div>
-                                <div class="mb-0">
-                                    <p class="h6">Not Ready Count: {{ node.count }}</p>
-                                </div>
-                            </div>
+                    <div class="mb-0">
+                        <div class="mb-0 text-wrap">
+                            <a class="btn btn-outline-danger text-wrap"
+                                href="{{ url_for('nodes.nodes', node_id=node.id)}}">{{ node.node }}</a>
+                        </div>
+                        <div class="mb-0">
+                            <p class="h6">Cluster: <a class="badge ps-0 text-decoration-none"
+                                    href="{{ url_for('nodes.nodes_by_prometheus', cluster=node.prometheus)}}">
+                                    <span>{{ node.prometheus }}</span></a></p>
+                        </div>
+                        <div class="mb-0">
+                            <p class="h6">Region: <a class="badge ps-0 text-decoration-none"
+                                    href="{{ url_for('nodes.nodes_by_region', region=node.region)}}"> <span>{{
+                                        node.region }}</span></a></p>
+                        </div>
+                        <div class="mb-0">
+                            <p class="h6">Schedulable: <a class="badge ps-0 text-decoration-none"
+                                    href="{{ url_for('nodes.nodes_by_schedulable', schedulable=node.schedulable)}}">
+                                    <span>{{ node.schedulable }}</span></a></p>
+                        </div>
+                        <div class="mb-0">
+                            {% if node.reported == false %}
+                            <p class="h6">Reported: <span><a class="badge text-decoration-none"
+                                        href="{{ url_for('nodes.reported', node_id=node.id)}}"><i class="bi bi-flag"
+                                            style="font-size: 1rem; color: #4e73e5;"></i></a></span></p>
+                            {% else %}
+                            <p class="h6">Reported: <span><a class="badge text-decoration-none"
+                                        href="{{ url_for('nodes.reported', node_id=node.id)}}"><i
+                                            class="bi bi-flag-fill"
+                                            style="font-size: 1rem; color: indianred;"></i></a></span></p>
+                            {% endif %}
+                        </div>
+                        <div class="mb-0">
+                            <p class="h6">Not Ready Count: {{ node.count }}</p>
                         </div>
                     </div>
                 </div>
@@ -50,39 +58,47 @@
             {% for node in nodes %}
             <div class="col-md-4">
                 <div class="card p-3 mb-2">
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex flex-row align-items-center">
+                    <div class="mt-5">
+                        <div class="mb-0">
                             <div class="mb-0">
-                                <div class="mb-0">
-                                    <a class="h5 btn btn-outline-info" href="{{ url_for('nodes.nodes', node_id=node.id)}}">{{ node.node }}</a> 
-                                </div>
-                                <div class="mb-0">
-                                    <a class="badge ps-0 text-decoration-none" href="{{ url_for('nodes.nodes_by_prometheus', cluster=node.prometheus)}}"> <span>{{ node.prometheus }}</span> </a>
-                                </div>
-                                <div class="mb-0">
-                                    {% if node.reported == false %}
-                                        <p class="h6">Reported: <span><a class="badge text-decoration-none" href="{{ url_for('nodes.reported', node_id=node.id)}}"><i class="bi bi-flag" style="font-size: 1rem; color: #4e73e5;"></i></a></span></p>
-                                    {% else %}
-                                        <p class="h6">Reported: <span><a class="badge text-decoration-none" href="{{ url_for('nodes.reported', node_id=node.id)}}"><i class="bi bi-flag-fill" style="font-size: 1rem; color: indianred;"></i></a></span></p>
-                                    {% endif %}
-                                </div>
-                                <div class="mb-0">
-                                    <p class="h6">Not Ready Count: {{ node.count }}</p>
-                                </div>
-                                <div class="mb-0">
-                                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapse-{{node.id}}" aria-expanded="false" aria-controls="collapse-{{node.id}}">
-                                        history data
-                                    </button>
-                                </div>
-                                <div class="mb-0">
-                                    <div class="collapse" id="collapse-{{node.id}}">
-                                        <div class="card card-body">
-                                            <h4>Incidence time</h4>
-                                            {% for record in node.records %}
-                                            <p class="h6">{{ record.creation_time }}</p>
-                                            {% endfor %}
-                                        </div>
+                                <button class="h5 btn btn-outline-info"
+                                    href="{{ url_for('nodes.nodes', node_id=node.id)}}">{{
+                                    node.node }}</button>
+                            </div>
+                            <div class="mb-0">
+                                <a class="badge ps-0 text-decoration-none"
+                                    href="{{ url_for('nodes.nodes_by_prometheus', cluster=node.prometheus)}}"> <span>{{
+                                        node.prometheus }}</span> </a>
+                            </div>
+                            <div class="mb-0">
+                                {% if node.reported == false %}
+                                <p class="h6">Reported: <span><a class="badge text-decoration-none"
+                                            href="{{ url_for('nodes.reported', node_id=node.id)}}"><i class="bi bi-flag"
+                                                style="font-size: 1rem; color: #4e73e5;"></i></a></span></p>
+                                {% else %}
+                                <p class="h6">Reported: <span><a class="badge text-decoration-none"
+                                            href="{{ url_for('nodes.reported', node_id=node.id)}}"><i
+                                                class="bi bi-flag-fill"
+                                                style="font-size: 1rem; color: indianred;"></i></a></span></p>
+                                {% endif %}
+                            </div>
+                            <div class="mb-0">
+                                <p class="h6">Not Ready Count: {{ node.count }}</p>
+                            </div>
+                            <div class="mb-0">
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse-{{node.id}}" aria-expanded="false"
+                                    aria-controls="collapse-{{node.id}}">
+                                    history data
+                                </button>
+                            </div>
+                            <div class="mb-0">
+                                <div class="collapse" id="collapse-{{node.id}}">
+                                    <div class="card card-body">
+                                        <h4>Incidence time</h4>
+                                        {% for record in node.records %}
+                                        <p class="h6">{{ record.creation_time }}</p>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>

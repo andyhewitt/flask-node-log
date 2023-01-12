@@ -15,6 +15,11 @@ def index():
     current_not_ready = Node.query.filter_by(current_not_ready=True).all()
     return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
 
+# @nodes_blueprint.route('/refresh')
+# def refresh():
+#     nodes = Node.query.all()
+#     current_not_ready = Node.query.filter_by(current_not_ready=True).all()
+#     return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
 
 @nodes_blueprint.route('/<int:node_id>/')
 def nodes(node_id):

@@ -1,4 +1,3 @@
-from flask import request
 from project.api.models import Node, Record
 from project import db, create_app
 import requests
@@ -6,7 +5,6 @@ import re
 import logging
 
 app = create_app()
-
 
 class GetNodeStatus():
 
@@ -16,7 +14,7 @@ class GetNodeStatus():
              'sum by (node, prometheus) (kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s.*",status="true"}==0) + on(node, prometheus) kube_node_spec_unschedulable'),
         )
         response = requests.get(
-            'https://caas.qa-mon-aas-api.r-local.net/prometheus/api/v1/query', params=params)
+            'https://caas.mon-aas-api.r-local.net/prometheus/api/v1/query', params=params)
         response = response.json()
 
         return response["data"]["result"]
@@ -82,33 +80,3 @@ class GetNodeStatus():
                 cr_node.current_not_ready = False
                 db.session.add(cr_node)
                 db.session.commit()
-
-    def register_current_not_ready(self):
-        node_raw = self.process_node()
-
-
-
-
-class PostClients():
-    def __init__(self, prometheus, node, summary) -> None:
-        self.prometheus = prometheus
-        self.node = node
-        self.summary = ""
-
-    def create(self):
-        if request.method == 'POST':
-            prometheus = self.prometheus
-            node = self.node
-            node = Node(prometheus=prometheus,
-                        node=node,
-                        summary=self.summary)
-            db.session.add(node)
-            db.session.commit()
-
-    def edit(self, node_id):
-        node = Node.query.get_or_404(node_id)
-
-        if request.method == 'POST':
-
-            db.session.add(node)
-            db.session.commit()
