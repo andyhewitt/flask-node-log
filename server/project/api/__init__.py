@@ -3,6 +3,7 @@ from project.api.models import Node, Record
 from project import db, create_app
 import requests
 import re
+import logging
 
 app = create_app()
 
@@ -12,10 +13,10 @@ class GetNodeStatus():
     def get_not_ready_list(self):
         params = (
             ('query',
-             'kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s-v2.*",status="true"}==0'),
+             'kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s.*",status="true"}==0'),
         )
         response = requests.get(
-            'http://localhost:3000/sample')
+            'http://localhost:3000/sample', params=params)
         response = response.json()
 
         return response["data"]["result"]
@@ -47,18 +48,18 @@ class GetNodeStatus():
             # If this node is currently not ready, ignore
             if is_current_notready is not None:
                 # Ignore this one because it is a ongoing alert
-                print("Still ongoing", is_current_notready.node)
+                logging.info(f"Still ongoing {is_current_notready.node}")
             # Else, update db if db has record, or create a new record
             else:
                 if is_not_ready_and_existing is not None:
-                    print("Existing ", new_entered_node)
+                    logging.info(f"Existing {new_entered_node}")
                     is_not_ready_and_existing.current_not_ready = True
                     record = Record(nodes=is_not_ready_and_existing)
                     db.session.add(is_not_ready_and_existing)
                     db.session.add(record)
                     db.session.commit()
                 else:
-                    print("New node", new_entered_node)
+                    logging.info(f"New node {new_entered_node}")
                     new_node = Node(
                         node=new_entered_node,
                         prometheus=new_entered_node_prometheus,
@@ -74,7 +75,7 @@ class GetNodeStatus():
         # print(new_nr_node_list)
         for cr_node in prev_not_ready:
             if cr_node.node not in new_nr_node_list:
-                print("Resolved ", cr_node.node)
+                logging.info(f"Resolved {cr_node.node}")
                 cr_node.current_not_ready = False
                 db.session.add(cr_node)
                 db.session.commit()

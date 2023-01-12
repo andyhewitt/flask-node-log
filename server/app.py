@@ -16,9 +16,9 @@ def start_recording():
         new_request = GetNodeStatus()
         new_request.process_node()
 
+sched = BackgroundScheduler(daemon=True)
+sched.add_job(start_recording, 'interval', minutes=2)
+sched.start()
 
 if __name__ == '__main__':
-    sched = BackgroundScheduler(daemon=True)
-    sched.add_job(start_recording, 'interval', minutes=0.3)
-    sched.start()
     app.run(debug=True, port=3001)

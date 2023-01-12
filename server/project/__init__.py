@@ -1,4 +1,5 @@
 import os
+import logging
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -12,7 +13,9 @@ migrate = Migrate()
 
 
 def create_app(script_info=None):
-
+    format = "%(asctime)s: %(message)s"
+    logging.basicConfig(format=format, level=logging.INFO,
+                        datefmt="%H:%M:%S")
     # instantiate the app
     app = Flask(__name__, template_folder="templates")
 
