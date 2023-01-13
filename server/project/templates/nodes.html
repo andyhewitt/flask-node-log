@@ -20,7 +20,7 @@
                     <input class="btn btn-primary" type="submit" value="Summary">
                 </div>
             </form>
-            {% if node.schedulable == false and node.current_not_ready == false %}
+            {% if node.schedulable == false and node.current_not_ready == true %}
                 <p class="h6"><span><a class="badge text-decoration-none" href="{{ bmaas_id }}""><span>{{ bmaas_id }}</span></a></span></p>
             {% else %}
                 <p class="h6"><span><a class="badge text-decoration-none" href="#"><span>Method not allowed</span></a></span></p>

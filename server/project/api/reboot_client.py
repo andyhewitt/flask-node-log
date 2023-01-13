@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-CLIENT_SECRET_QA = os.getenv('client_secret_qa')
-CLIENT_SECRET_PROD = os.getenv('client_secret_prod')
+CLIENT_SECRET_QA = os.getenv('CLIENT_SECRET_QA')
+CLIENT_SECRET_PROD = os.getenv('CLIENT_SECRET_PROD')
 
 
 class RebootClient():
@@ -27,7 +27,8 @@ class RebootClient():
             "jpw1a": "https://jpw1a-talaria.bmaas.jpw1a.dcnw.rakuten/talaria/",
             "euc1a": "https://euw1a-talaria.bmaas.euw1a.dcnw.rakuten/talaria/",
             "use1a": "https://use1a-talaria.bmaas.use1a.dcnw.rakuten/talaria/",
-            "usw1a": "https://usw1a-talaria1.bmaas.usw1a.dcnw.rakuten/talaria/"
+            "usw1a": "https://usw1a-talaria1.bmaas.usw1a.dcnw.rakuten/talaria/",
+            "euw1a": "https://euw1a-talaria.bmaas.euw1a.dcnw.rakuten/talaria/"
         }
 
         headers = {
