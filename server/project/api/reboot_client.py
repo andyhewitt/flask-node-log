@@ -1,11 +1,8 @@
 import requests
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
-
-CLIENT_SECRET_QA = os.getenv('CLIENT_SECRET_QA')
-CLIENT_SECRET_PROD = os.getenv('CLIENT_SECRET_PROD')
+CLIENT_SECRET_QA = os.environ.get('CLIENT_SECRET_QA')
+CLIENT_SECRET_PROD = os.environ.get('CLIENT_SECRET_PROD')
 
 
 class RebootClient():
@@ -44,7 +41,7 @@ class RebootClient():
         data = {
             'grant_type': 'client_credentials',
             'client_id': 'rns:roc:caas-k8s-master',
-            'client_secret': token
+            'client_secret': token.strip()
         }
 
         response = requests.post(

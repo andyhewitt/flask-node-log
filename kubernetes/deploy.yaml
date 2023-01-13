@@ -10,6 +10,7 @@ spec:
     targetPort: 8080
   selector:
     app: flask-node-log
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -30,8 +31,19 @@ spec:
         app: flask-node-log
     spec:
       containers:
-      - image: registry-jpe2-beta.r-local.net/caas-common/flask-app:v20221125-4
+      - image: registry-jpe2-beta.r-local.net/caas-common/flask-node-log:test
         name: flask-node-log
+        env:
+          - name: CLIENT_SECRET_QA
+            valueFrom:
+              secretKeyRef:
+                name: client-k8s-credentials
+                key: client_secret_qa
+          - name: CLIENT_SECRET_PROD
+            valueFrom:
+              secretKeyRef:
+                name: client-k8s-credentials
+                key: client_secret_prod
         resources:
           requests:
             memory: "128Mi"
