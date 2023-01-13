@@ -1,5 +1,6 @@
 from project.api.models import Node, Record
 from project.api.reboot_client import RebootClient
+from project.api import GetNodeStatus
 from project import db
 from flask import render_template, redirect, url_for, request
 import time
@@ -15,11 +16,13 @@ def index():
     current_not_ready = Node.query.filter_by(current_not_ready=True).all()
     return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
 
-# @nodes_blueprint.route('/refresh')
-# def refresh():
-#     nodes = Node.query.all()
-#     current_not_ready = Node.query.filter_by(current_not_ready=True).all()
-#     return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
+@nodes_blueprint.route('/refresh/')
+def refresh():
+    new_request = GetNodeStatus()
+    new_request.process_node()
+    nodes = Node.query.all()
+    current_not_ready = Node.query.filter_by(current_not_ready=True).all()
+    return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
 
 @nodes_blueprint.route('/<int:node_id>/')
 def nodes(node_id):

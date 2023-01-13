@@ -1,13 +1,11 @@
 from project.api.models import Node, Record
-from project import db, create_app
+from project import db
 import requests
 import re
 import logging
 
-app = create_app()
 
 class GetNodeStatus():
-
     def get_not_ready_list(self):
         params = (
             ('query',
@@ -80,3 +78,8 @@ class GetNodeStatus():
                 cr_node.current_not_ready = False
                 db.session.add(cr_node)
                 db.session.commit()
+
+    def get_index():
+        nodes = Node.query.all()
+        current_not_ready = Node.query.filter_by(current_not_ready=True).all()
+        return (nodes, current_not_ready)
