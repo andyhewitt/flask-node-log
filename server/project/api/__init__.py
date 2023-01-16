@@ -6,25 +6,29 @@ import logging
 
 
 class GetNodeStatus():
-    def get_not_ready_list(self):
+    def get_not_ready_list(self, env):
         params = (
             ('query',
              'sum by (node, prometheus) (kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s.*",status="true"}==0) + on(node, prometheus) kube_node_spec_unschedulable'),
         )
+        mon_aas_url = 'https://caas.mon-aas-api.r-local.net/prometheus/api/v1/query' if env == "prod" else 'https://caas.qa-mon-aas-api.r-local.net/prometheus/api/v1/query'
         response = requests.get(
-            'https://caas.mon-aas-api.r-local.net/prometheus/api/v1/query', params=params)
+            mon_aas_url, params=params)
         response = response.json()
 
         return response["data"]["result"]
 
-    def process_node(self):
-        new_nr_node = self.get_not_ready_list()
-        new_nr_node_list = []
+    def process_node(self, env):
+        new_nr_node = self.get_not_ready_list(env)
+        new_nr_node_list = {
+            'qa': [],
+            'prod': []
+        }
         for new_list in new_nr_node:
-            new_nr_node_list.append(new_list["metric"]["node"])
+            new_nr_node_list[env].append(new_list["metric"]["node"])
 
         # Get all the current not ready nodes on last check
-        prev_not_ready = Node.query.filter_by(current_not_ready=True).all()
+        prev_not_ready = Node.query.filter_by(current_not_ready=True, env=env).all()
         # Step 1, update current not ready node.
         for new_node in new_nr_node:
             new_entered_node = new_node["metric"]["node"]
@@ -36,11 +40,11 @@ class GetNodeStatus():
 
             # Check if this node is already in the database and is currently not ready.
             is_current_notready = Node.query.filter_by(
-                current_not_ready=True, node=new_entered_node).first()
+                current_not_ready=True, node=new_entered_node, env=env).first()
 
             # Check if this node is in the database
             is_not_ready_and_existing = Node.query.filter_by(
-                node=new_entered_node).first()
+                node=new_entered_node, env=env).first()
 
             # If this node is currently not ready, ignore
             if is_current_notready is not None:
@@ -60,7 +64,8 @@ class GetNodeStatus():
                     new_node = Node(
                         node=new_entered_node,
                         region=region,
-                        schedulable= scheduling_status,
+                        env=env,
+                        schedulable=scheduling_status,
                         prometheus=new_entered_node_prometheus,
                         summary="",
                         current_not_ready=True
@@ -73,7 +78,7 @@ class GetNodeStatus():
         # Set resolved node to false and also update record
         # print(new_nr_node_list)
         for cr_node in prev_not_ready:
-            if cr_node.node not in new_nr_node_list:
+            if cr_node.node not in new_nr_node_list[env]:
                 logging.info(f"Resolved {cr_node.node}")
                 cr_node.current_not_ready = False
                 db.session.add(cr_node)
@@ -81,5 +86,5 @@ class GetNodeStatus():
 
     def get_index():
         nodes = Node.query.all()
-        current_not_ready = Node.query.filter_by(current_not_ready=True).all()
+        current_not_ready = Node.query.filter_by(current_not_ready=True, env=env).all()
         return (nodes, current_not_ready)

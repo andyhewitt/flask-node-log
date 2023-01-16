@@ -11,6 +11,26 @@ from flask_migrate import Migrate
 db = SQLAlchemy()
 migrate = Migrate()
 
+def make_nav_bar(env):
+    bar =  (
+        {
+            "name": "prod",
+            "text": "Production clusters",
+            "url": "/prod",
+            "active": "",
+        },
+        {
+            "name": "qa",
+            "text": "QA clusters",
+            "url": "/qa",
+            "active": "",
+        }
+    )
+    for item in bar:
+        if item["name"] == env:
+            item["active"] = "active"
+    return bar
+
 
 def create_app(script_info=None):
     format = "%(asctime)s: %(message)s"

@@ -16,6 +16,7 @@ class Node(db.Model):
     reported = db.Column(db.Boolean, default=False, nullable=False)
     schedulable = db.Column(db.Boolean, nullable=False)
     region = db.Column(db.String(100), nullable=False)
+    env = db.Column(db.String(20), nullable=False)
     summary = db.Column(db.Text)
     records = db.relationship('Record', backref="nodes", lazy=True)
 
