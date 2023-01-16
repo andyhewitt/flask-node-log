@@ -12,7 +12,7 @@ class GetNodeStatus():
              'sum by (node, prometheus) (kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s.*",status="true"}==0) + on(node, prometheus) kube_node_spec_unschedulable'),
         )
         response = requests.get(
-            'https://caas.mon-aas-api.r-local.net/prometheus/api/v1/query', params=params)
+            'https://caas.qa-mon-aas-api.r-local.net/prometheus/api/v1/query', params=params)
         response = response.json()
 
         return response["data"]["result"]
@@ -46,6 +46,9 @@ class GetNodeStatus():
             if is_current_notready is not None:
                 # Ignore this one because it is a ongoing alert
                 logging.info(f"Still ongoing {is_current_notready.node}")
+                if is_current_notready.schedulable != scheduling_status:
+                    is_current_notready.schedulable = scheduling_status
+                    db.session.commit()
             # Else, update db if db has record, or create a new record
             else:
                 if is_not_ready_and_existing is not None:

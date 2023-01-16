@@ -2,7 +2,7 @@ from project.api.models import Node, Record
 from project.api.reboot_client import RebootClient
 from project.api import GetNodeStatus
 from project import db
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, flash
 import time
 
 from flask import Blueprint
@@ -10,11 +10,15 @@ from flask import Blueprint
 nodes_blueprint = Blueprint('nodes', __name__)
 
 
+reboot_client = RebootClient()
+
+
 @nodes_blueprint.route('/')
 def index():
     nodes = Node.query.all()
     current_not_ready = Node.query.filter_by(current_not_ready=True).all()
     return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
+
 
 @nodes_blueprint.route('/refresh/')
 def refresh():
@@ -24,12 +28,14 @@ def refresh():
     current_not_ready = Node.query.filter_by(current_not_ready=True).all()
     return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
 
+
 @nodes_blueprint.route('/<int:node_id>/')
 def nodes(node_id):
-    reboot_client = RebootClient()
+
     node = Node.query.get_or_404(node_id)
-    bmaas_id = reboot_client.get_token(node.node.split('.')[0], node.region)
-    return render_template('nodes.html', node=node, bmaas_id=bmaas_id)
+    bmaas_url, bmaas_id = reboot_client.get_talaria_url(
+        node.node.split('.')[0], node.region)
+    return render_template('nodes.html', node=node, bmaas_url=bmaas_url, bmaas_id=bmaas_id)
 
 
 @nodes_blueprint.route('/cluster/<string:cluster>/')
@@ -39,12 +45,14 @@ def nodes_by_prometheus(cluster):
     nodes = Node.query.filter_by(prometheus=cluster)
     return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
 
+
 @nodes_blueprint.route('/region/<string:region>/')
 def nodes_by_region(region):
     current_not_ready = Node.query.filter_by(
         region=region, current_not_ready=True).all()
     nodes = Node.query.filter_by(region=region)
     return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
+
 
 @nodes_blueprint.route('/schedulable/<string:schedulable>/')
 def nodes_by_schedulable(schedulable):
@@ -79,6 +87,12 @@ def summary(node_id):
         db.session.commit()
 
         return redirect(url_for('nodes.nodes', node_id=node_id))
+
+
+@nodes_blueprint.route('/<int:node_id>/restart/<int:bmaas_id>/')
+def restart(node_id, bmaas_id):
+    flash(reboot_client.reboot_by_id("38074", "jpe1z"))
+    return redirect(url_for('nodes.nodes', node_id=node_id))
 
 
 @nodes_blueprint.route('/healthz')
