@@ -11,6 +11,7 @@ nodes_blueprint = Blueprint('nodes', __name__)
 
 
 reboot_client = RebootClient()
+node_client = GetNodeStatus()
 
 
 @nodes_blueprint.route('/')
@@ -22,8 +23,7 @@ def index():
 
 @nodes_blueprint.route('/refresh/')
 def refresh():
-    new_request = GetNodeStatus()
-    new_request.process_node()
+    node_client.process_node()
     nodes = Node.query.all()
     current_not_ready = Node.query.filter_by(current_not_ready=True).all()
     return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
@@ -91,6 +91,7 @@ def summary(node_id):
 
 @nodes_blueprint.route('/<int:node_id>/restart/<int:bmaas_id>/')
 def restart(node_id, bmaas_id):
+    node_client.process_node()
     flash(reboot_client.reboot_by_id("38074", "jpe1z"))
     return redirect(url_for('nodes.nodes', node_id=node_id))
 

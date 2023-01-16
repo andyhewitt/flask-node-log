@@ -1,5 +1,6 @@
 import requests
 import os
+import json
 
 CLIENT_SECRET_QA = os.environ.get('CLIENT_SECRET_QA')
 CLIENT_SECRET_PROD = os.environ.get('CLIENT_SECRET_PROD')
@@ -79,7 +80,8 @@ class RebootClient():
             'content-type': 'application/json',
         }
 
-        data = '{ "force": false, "ids": [ 38074 ]}'
+        data = {"force": "false", "ids": [38074]}
+        data = json.dumps(data)
 
         server_response = requests.post(
             self.bmaas_region[region] + self.bmaas_api_url + '/powerrestart', headers=headers, data=data, verify=False)
