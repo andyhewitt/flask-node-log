@@ -52,38 +52,43 @@ class RebootClient():
         return response.json()["access_token"]
 
     def get_talaria_url(self, hostname, region):
+        try:
+            token = self.get_token(region)
 
-        token = self.get_token(region)
+            server_headers = {
+                'Authorization': f'Bearer {token}',
+            }
 
-        server_headers = {
-            'Authorization': f'Bearer {token}',
-        }
+            params = (
+                ('hostname', hostname),
+            )
 
-        params = (
-            ('hostname', hostname),
-        )
+            server_response = requests.get(
+                self.bmaas_region[region] + self.bmaas_api_url, headers=server_headers, params=params, verify=False)
 
-        server_response = requests.get(
-            self.bmaas_region[region] + self.bmaas_api_url, headers=server_headers, params=params, verify=False)
+            bmaas_id = server_response.json()["servers"][0]["id"]
 
-        bmaas_id = server_response.json()["servers"][0]["id"]
-
-        return (self.bmaas_region[region] + self.bmaas_server_url + str(bmaas_id), bmaas_id)
+            return (self.bmaas_region[region] + self.bmaas_server_url + str(bmaas_id), bmaas_id)
+        except:
+            return ("cannotconnect.sample/url", 0000)
 
     def reboot_by_id(self, bmaas_id, region):
+        try:
+            token = self.get_token(region)
 
-        token = self.get_token(region)
+            headers = {
+                'Authorization': f'Bearer {token}',
+                'accept': 'application/json',
+                'content-type': 'application/json',
+            }
 
-        headers = {
-            'Authorization': f'Bearer {token}',
-            'accept': 'application/json',
-            'content-type': 'application/json',
-        }
+            data = {"force": "false", "ids": [38074]}
+            data = json.dumps(data)
 
-        data = {"force": "false", "ids": [38074]}
-        data = json.dumps(data)
+            server_response = requests.post(
+                self.bmaas_region[region] + self.bmaas_api_url + '/powerrestart', headers=headers, data=data, verify=False)
 
-        server_response = requests.post(
-            self.bmaas_region[region] + self.bmaas_api_url + '/powerrestart', headers=headers, data=data, verify=False)
+            return server_response.json()["message"]
 
-        return server_response.json()["message"]
+        except:
+            return "Request failed, please check your token."

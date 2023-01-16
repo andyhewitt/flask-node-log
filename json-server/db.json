@@ -6,19 +6,31 @@
 					"metric": {
 						"node": "jpe2-caas1-prod2-node-000149.caas.jpe2c.dcnw.rakuten",
 						"prometheus": "jpe2-caas1-prod2-k8s"
-					}
+					},
+					"value": [
+						"12345",
+						"0"
+					]
 				},
 				{
 					"metric": {
 						"node": "jpe2-caas1-prod1-node-001653.caas.jpe2b.dcnw.rakuten",
 						"prometheus": "jpe2-caas1-prod1-k8s"
-					}
+					},
+					"value": [
+						"12345",
+						"1"
+					]
 				},
 				{
 					"metric": {
 						"node": "use1-caas1-prod1-node-000004.caas.use1a.dcnw.rakuten",
 						"prometheus": "use1-caas1-prod1-k8s"
-					}
+					},
+					"value": [
+						"12345",
+						"0"
+					]
 				}
 			]
 		}

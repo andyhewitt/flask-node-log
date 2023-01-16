@@ -12,7 +12,7 @@ class GetNodeStatus():
              'sum by (node, prometheus) (kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s.*",status="true"}==0) + on(node, prometheus) kube_node_spec_unschedulable'),
         )
         response = requests.get(
-            'https://caas.qa-mon-aas-api.r-local.net/prometheus/api/v1/query', params=params)
+            'http://localhost:3000/sample', params=params)
         response = response.json()
 
         return response["data"]["result"]
@@ -63,7 +63,7 @@ class GetNodeStatus():
                     new_node = Node(
                         node=new_entered_node,
                         region=region,
-                        schedulable= scheduling_status,
+                        schedulable=scheduling_status,
                         prometheus=new_entered_node_prometheus,
                         summary="",
                         current_not_ready=True
