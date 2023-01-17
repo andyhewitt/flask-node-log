@@ -29,7 +29,7 @@ def make_nav_bar(env):
     for item in bar:
         if item["name"] == env:
             item["active"] = "active"
-    return 
+    return bar
 
 
 def create_app(script_info=None):

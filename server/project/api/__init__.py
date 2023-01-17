@@ -86,3 +86,5 @@ class GetNodeStatus():
                 cr_node.current_not_ready = False
                 db.session.add(cr_node)
                 db.session.commit()
+
+        return f'Successfully get {env} status.'
