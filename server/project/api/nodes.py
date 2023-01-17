@@ -37,6 +37,7 @@ def nodes(node_id):
     node = Node.query.get_or_404(node_id)
     bmaas_url, bmaas_id = reboot_client.get_talaria_url(
         node.node.split('.')[0], node.region)
+    node_client.process_node(node.env)
     return render_template('nodes.html', node=node, bmaas_url=bmaas_url, bmaas_id=bmaas_id)
 
 
@@ -91,14 +92,14 @@ def summary(node_id):
         return redirect(url_for('nodes.nodes', node_id=node_id))
 
 
-@nodes_blueprint.route('/<int:node_id>/restart/<int:bmaas_id>/')
-def restart(node_id, bmaas_id):
-    node_client.process_node()
+@nodes_blueprint.route('/<string:env>/<int:node_id>/restart/<int:bmaas_id>/')
+def restart(node_id, bmaas_id, env):
+    node_client.process_node(env)
     node = Node.query.get_or_404(node_id)
-    if node.schedulable == True:
-        flash('Please drain the node first before operation.')
-    else:
+    if node.schedulable == False and node.current_not_ready == True:
         flash(reboot_client.reboot_by_id(bmaas_id, node.region))
+    else:
+        flash('Please drain and cordon the node!')
     return redirect(url_for('nodes.nodes', node_id=node_id))
 
 

@@ -33,8 +33,8 @@
                 </div>
             </form>
             {% if node.schedulable == false and node.current_not_ready == true and node.env == 'qa' %}
-                <p class="h6"><a class="ps-0 pe-0 badge text-decoration-none" href="{{ bmaas_url }}""><span>{{ bmaas_url }}</span></a></p>
-                <form action="{{ url_for('nodes.restart', node_id=node.id, bmaas_id=bmaas_id) }}" method="GET"
+                <p class="h6"><a class="ps-0 pe-0 badge text-decoration-none" href="{{ bmaas_url }}"><span>{{ bmaas_url }}</span></a></p>
+                <form action="{{ url_for('nodes.restart', node_id=node.id, bmaas_id=bmaas_id, env=node.env) }}" method="GET"
                     onsubmit="return confirm('Are you sure you wish to restart node {{ bmaas_id }} ?\nNode name: {{ node.node }}\nRegion: {{ node.region }}');">
                     <button class="btn btn-danger" type="submit">Restart</button>
                 </form>
