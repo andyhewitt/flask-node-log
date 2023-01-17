@@ -31,7 +31,6 @@ def refresh():
 
 @nodes_blueprint.route('/<int:node_id>/')
 def nodes(node_id):
-
     node = Node.query.get_or_404(node_id)
     bmaas_url, bmaas_id = reboot_client.get_talaria_url(
         node.node.split('.')[0], node.region)
@@ -92,7 +91,11 @@ def summary(node_id):
 @nodes_blueprint.route('/<int:node_id>/restart/<int:bmaas_id>/')
 def restart(node_id, bmaas_id):
     node_client.process_node()
-    flash(reboot_client.reboot_by_id("38074", "jpe1z"))
+    node = Node.query.get_or_404(node_id)
+    if node.schedulable == True:
+        flash('Please drain the node first before operation.')
+    else:
+        flash(reboot_client.reboot_by_id(bmaas_id, node.region))
     return redirect(url_for('nodes.nodes', node_id=node_id))
 
 

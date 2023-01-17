@@ -82,7 +82,7 @@ class RebootClient():
                 'content-type': 'application/json',
             }
 
-            data = {"force": "false", "ids": [38074]}
+            data = {"force": "false", "ids": [bmaas_id]}
             data = json.dumps(data)
 
             server_response = requests.post(
