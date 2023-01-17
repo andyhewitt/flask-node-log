@@ -1,6 +1,7 @@
 from project.api.models import Node, Record
 from project.api.reboot_client import RebootClient
 from project.api import GetNodeStatus
+from project import make_nav_bar
 from project import db
 from flask import render_template, redirect, url_for, request, flash
 import time
@@ -13,20 +14,22 @@ nodes_blueprint = Blueprint('nodes', __name__)
 reboot_client = RebootClient()
 node_client = GetNodeStatus()
 
-
+@nodes_blueprint.route('/<string:env>')
 @nodes_blueprint.route('/')
-def index():
-    nodes = Node.query.all()
-    current_not_ready = Node.query.filter_by(current_not_ready=True).all()
-    return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
+def index(env='qa'):
+    navbar = make_nav_bar(env)
+    nodes = Node.query.filter_by(
+        env=env).all()
+    current_not_ready = Node.query.filter_by(
+        current_not_ready=True, env=env).all()
+    return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready, navbar=navbar)
 
 
-@nodes_blueprint.route('/refresh/')
+@nodes_blueprint.route('/refresh/', methods=('GET',))
 def refresh():
-    node_client.process_node()
-    nodes = Node.query.all()
-    current_not_ready = Node.query.filter_by(current_not_ready=True).all()
-    return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready)
+    node_client.process_node('qa')
+    node_client.process_node('prod')
+    return redirect(request.referrer)
 
 
 @nodes_blueprint.route('/<int:node_id>/')
