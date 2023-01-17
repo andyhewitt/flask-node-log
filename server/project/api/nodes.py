@@ -22,17 +22,13 @@ def index(env='qa'):
     return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready, navbar=navbar)
 
 
-@nodes_blueprint.route('/refresh/<string:env>')
-def refresh(env='qa'):
+@nodes_blueprint.route('/refresh/', methods=('GET',))
+def refresh():
     new_request = GetNodeStatus()
-    new_request.process_node(env)
-    navbar = make_nav_bar(env)
-    nodes = Node.query.filter_by(
-        env=env).all()
-    current_not_ready = Node.query.filter_by(
-        current_not_ready=True, env=env).all()
-    return render_template('index.html', nodes=nodes, current_not_ready=current_not_ready, navbar=navbar)
-
+    new_request.process_node('qa')
+    new_request.process_node('prod')
+    print(request.referrer)
+    return redirect(request.referrer)
 
 @nodes_blueprint.route('/<int:node_id>/')
 def nodes(node_id):
