@@ -19,18 +19,27 @@ class GetNodeStatus():
         return response["data"]["result"]
 
     def process_node(self, env):
-        new_nr_node = self.get_not_ready_list(env)
-        new_nr_node_list = {
+        new_notready_nodes = self.get_not_ready_list(env)
+        new_notready_nodes_list = {
             'qa': [],
             'prod': []
         }
-        for new_list in new_nr_node:
-            new_nr_node_list[env].append(new_list["metric"]["node"])
+        for new_list in new_notready_nodes:
+            new_notready_nodes_list[env].append(new_list["metric"]["node"])
 
-        # Get all the current not ready nodes on last check
-        prev_not_ready = Node.query.filter_by(current_not_ready=True, env=env).all()
+        # Get all the not ready nodes on last check
+        prev_not_ready = Node.query.filter_by(
+            current_not_ready=True, env=env).all()
+        # Set resolved node to false and also update record
+        for prev_node in prev_not_ready:
+            if prev_node.node not in new_notready_nodes_list[env]:
+                logging.info(f"Resolved {prev_node.node}")
+                prev_node.current_not_ready = False
+                db.session.add(prev_node)
+                db.session.commit()
+
         # Step 1, update current not ready node.
-        for new_node in new_nr_node:
+        for new_node in new_notready_nodes:
             new_entered_node = new_node["metric"]["node"]
             region = new_entered_node.split('.')[2]
 
@@ -38,28 +47,30 @@ class GetNodeStatus():
                 r'([a-z]{1,}[0-9]{1}-[a-z]{1,}[0-9]{1}-[a-z]{1,}[0-9])', new_node["metric"]["prometheus"]).group(1)
             scheduling_status = False if new_node["value"][1] == "1" else True
 
-            # Check if this node is already in the database and is currently not ready.
-            is_current_notready = Node.query.filter_by(
+            # Check last status, if this node is already in the database and is currently not ready.
+            is_in_db_and_current_notready = Node.query.filter_by(
                 current_not_ready=True, node=new_entered_node, env=env).first()
 
             # Check if this node is in the database
-            is_not_ready_and_existing = Node.query.filter_by(
+            is_in_db = Node.query.filter_by(
                 node=new_entered_node, env=env).first()
 
-            # If this node is currently not ready, ignore
-            if is_current_notready is not None:
-                # Ignore this one because it is a ongoing alert
-                logging.info(f"Still ongoing {is_current_notready.node}")
-                if is_current_notready.schedulable != scheduling_status:
-                    is_current_notready.schedulable = scheduling_status
+            # If this node is currently not ready, update scheduling status and ignore
+            if is_in_db_and_current_notready is not None:
+                logging.info(
+                    f"Still ongoing {is_in_db_and_current_notready.node}")
+                if is_in_db_and_current_notready.schedulable != scheduling_status:
+                    is_in_db_and_current_notready.schedulable = scheduling_status
                     db.session.commit()
-            # Else, update db if db has record, or create a new record
+            # If it resolved, update db if db has record of it, or create a new record.
             else:
-                if is_not_ready_and_existing is not None:
+                if is_in_db is not None:
                     logging.info(f"Existing {new_entered_node}")
-                    is_not_ready_and_existing.current_not_ready = True
-                    record = Record(nodes=is_not_ready_and_existing)
-                    db.session.add(is_not_ready_and_existing)
+                    is_in_db.current_not_ready = True
+                    if is_in_db.schedulable != scheduling_status:
+                        is_in_db.schedulable = scheduling_status
+                    record = Record(nodes=is_in_db)
+                    db.session.add(is_in_db)
                     db.session.add(record)
                     db.session.commit()
                 else:
@@ -77,14 +88,5 @@ class GetNodeStatus():
                     db.session.add(new_node)
                     db.session.add(record)
                     db.session.commit()
-
-        # Set resolved node to false and also update record
-        # print(new_nr_node_list)
-        for cr_node in prev_not_ready:
-            if cr_node.node not in new_nr_node_list[env]:
-                logging.info(f"Resolved {cr_node.node}")
-                cr_node.current_not_ready = False
-                db.session.add(cr_node)
-                db.session.commit()
 
         return f'Successfully get {env} status.'
