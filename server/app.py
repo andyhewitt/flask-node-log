@@ -2,11 +2,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from project import create_app
 from project.api import GetNodeStatus
 
-import pytz
-
-UTC = pytz.utc
-
-IST = pytz.timezone('Asia/Tokyo')
 
 app = create_app()
 

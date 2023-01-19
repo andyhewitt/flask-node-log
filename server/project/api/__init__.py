@@ -47,46 +47,42 @@ class GetNodeStatus():
                 r'([a-z]{1,}[0-9]{1}-[a-z]{1,}[0-9]{1}-[a-z]{1,}[0-9])', new_node["metric"]["prometheus"]).group(1)
             scheduling_status = False if new_node["value"][1] == "1" else True
 
-            # Check last status, if this node is already in the database and is currently not ready.
-            is_in_db_and_current_notready = Node.query.filter_by(
-                current_not_ready=True, node=new_entered_node, env=env).first()
-
             # Check if this node is in the database
             is_in_db = Node.query.filter_by(
                 node=new_entered_node, env=env).first()
 
             # If this node is currently not ready, update scheduling status and ignore
-            if is_in_db_and_current_notready is not None:
+            if is_in_db is not None and is_in_db.current_not_ready == True:
                 logging.info(
-                    f"Still ongoing {is_in_db_and_current_notready.node}")
-                if is_in_db_and_current_notready.schedulable != scheduling_status:
-                    is_in_db_and_current_notready.schedulable = scheduling_status
+                    f"Still ongoing {is_in_db.node}")
+                if is_in_db.schedulable != scheduling_status:
+                    is_in_db.schedulable = scheduling_status
                     db.session.commit()
-            # If it resolved, update db if db has record of it, or create a new record.
+            # If in db but already resolved previously, update record.
+            elif is_in_db is not None:
+                logging.info(f"Existing {new_entered_node}")
+                is_in_db.current_not_ready = True
+                if is_in_db.schedulable != scheduling_status:
+                    is_in_db.schedulable = scheduling_status
+                record = Record(nodes=is_in_db)
+                db.session.add(is_in_db)
+                db.session.add(record)
+                db.session.commit()
+            # Create a new Node in the db.
             else:
-                if is_in_db is not None:
-                    logging.info(f"Existing {new_entered_node}")
-                    is_in_db.current_not_ready = True
-                    if is_in_db.schedulable != scheduling_status:
-                        is_in_db.schedulable = scheduling_status
-                    record = Record(nodes=is_in_db)
-                    db.session.add(is_in_db)
-                    db.session.add(record)
-                    db.session.commit()
-                else:
-                    logging.info(f"New node {new_entered_node}")
-                    new_node = Node(
-                        node=new_entered_node,
-                        region=region,
-                        env=env,
-                        schedulable=scheduling_status,
-                        prometheus=new_entered_node_prometheus,
-                        summary="",
-                        current_not_ready=True
-                    )
-                    record = Record(nodes=new_node)
-                    db.session.add(new_node)
-                    db.session.add(record)
-                    db.session.commit()
+                logging.info(f"New node {new_entered_node}")
+                new_node = Node(
+                    node=new_entered_node,
+                    region=region,
+                    env=env,
+                    schedulable=scheduling_status,
+                    prometheus=new_entered_node_prometheus,
+                    summary="",
+                    current_not_ready=True
+                )
+                record = Record(nodes=new_node)
+                db.session.add(new_node)
+                db.session.add(record)
+                db.session.commit()
 
         return f'Successfully get {env} status.'
