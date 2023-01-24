@@ -11,8 +11,9 @@ from flask_migrate import Migrate
 db = SQLAlchemy()
 migrate = Migrate()
 
+
 def make_nav_bar(env):
-    bar =  (
+    bar = (
         {
             "name": "prod",
             "text": "Production clusters",
@@ -47,6 +48,10 @@ def create_app(script_info=None):
     app_settings = os.getenv("APP_SETTINGS", "project.config.TestingConfig")
     app.config.from_object(app_settings)
 
+    app.config['WTF_CSRF_SECRET_KEY'] = 'random key for form'
+    app.config['LDAP_PROVIDER_URL'] = 'ldap://ldap.forumsys.com:389/'
+    app.config['LDAP_PROTOCOL_VERSION'] = 3
+
     # set up extensions
     db.init_app(app)
     migrate.init_app(app, db)
@@ -54,6 +59,10 @@ def create_app(script_info=None):
     # register blueprints
     from project.api.nodes import nodes_blueprint
     app.register_blueprint(nodes_blueprint)
+
+    # blueprint for auth routes in our app
+    from project.api.auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint)
 
     # # shell context for flask cli
     # @app.shell_context_processor
