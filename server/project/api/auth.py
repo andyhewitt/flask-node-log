@@ -1,5 +1,5 @@
 from flask import Blueprint
-import ldap3
+from project import db
 from flask import (request, render_template, flash, redirect, url_for,
                    Blueprint, g
                    )
@@ -12,7 +12,6 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    print(current_user.is_authenticated)
     if current_user.is_authenticated:
         flash('You are already logged in.')
         return redirect(url_for('auth.home'))
@@ -24,13 +23,15 @@ def login():
         try:
             User.try_login(username, password)
         except:
-            print("login failed")
             flash(
                 'Invalid username or password. Please try again.',
                 'danger')
             return render_template('login.html', form=form)
-        print("loggin")
-        user = User.query.filter_by(username=username)
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            user = User(username=username, password=password)
+            db.session.add(user)
+            db.session.commit()
         login_user(user)
         flash('You have successfully logged in.', 'success')
         return redirect(url_for('auth.home'))

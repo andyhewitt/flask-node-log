@@ -78,15 +78,8 @@ class User(db.Model):
     @staticmethod
     def try_login(username, password):
         server = Server('ldap.forumsys.com', get_info=ALL)
-        connection = Connection(server,
-                                'uid={username},dc=example,dc=com'.format(
-                                    username=username),
-                                password, auto_bind=True)
-        # conn = ldap3.initialize('ldap://ldap.forumsys.com:389/')
-        # conn.simple_bind_s(
-        #     'cn=%s,ou=mathematicians,dc=example,dc=com' % username, password
-        # )
-        print(connection.bind())
+        Connection(server, 'uid={username},dc=example,dc=com'.format(
+            username=username), password, auto_bind=True)
 
     def is_authenticated(self):
         return True
