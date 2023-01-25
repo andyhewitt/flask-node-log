@@ -14,7 +14,7 @@ auth = Blueprint('auth', __name__)
 def login():
     if current_user.is_authenticated:
         flash('You are already logged in.')
-        return redirect(url_for('auth.home'))
+        return redirect(url_for('nodes.index'))
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
         username = request.form['username']
@@ -47,5 +47,7 @@ def signup():
 
 
 @auth.route('/logout')
+@login_required
 def logout():
-    return 'Logout'
+    logout_user()
+    return redirect(url_for('auth.login'))
