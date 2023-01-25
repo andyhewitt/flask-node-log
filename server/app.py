@@ -14,7 +14,7 @@ def start_recording():
 
 
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(start_recording, 'interval', minutes=2)
+sched.add_job(start_recording, 'interval', minutes=200)
 sched.start()
 
 if __name__ == '__main__':

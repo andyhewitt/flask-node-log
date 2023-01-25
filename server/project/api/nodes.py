@@ -4,6 +4,7 @@ from project.api import GetNodeStatus
 from project import make_nav_bar
 from project import db
 from flask import render_template, redirect, url_for, request, flash
+from flask_login import (login_required)
 import time
 
 from flask import Blueprint
@@ -14,8 +15,10 @@ nodes_blueprint = Blueprint('nodes', __name__)
 reboot_client = RebootClient()
 node_client = GetNodeStatus()
 
+
 @nodes_blueprint.route('/<string:env>')
 @nodes_blueprint.route('/')
+@login_required
 def index(env='qa'):
     navbar = make_nav_bar(env)
     nodes = Node.query.filter_by(

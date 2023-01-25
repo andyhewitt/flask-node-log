@@ -34,7 +34,7 @@ def login():
             db.session.commit()
         login_user(user)
         flash('You have successfully logged in.', 'success')
-        return redirect(url_for('auth.home'))
+        return redirect(url_for('nodes.index'))
     if form.errors:
         flash(form.errors, 'danger')
 
