@@ -38,7 +38,7 @@ def create_app(script_info=None):
                         datefmt="%H:%M:%S")
     # instantiate the app
     app = Flask(__name__, template_folder="templates")
-    app.secret_key = b'7a6a4deee1175214e57cd3c7ee2a033ca90b2dc1809522e4'
+    app.secret_key = os.urandom(12).hex()
 
     # enable CORS
     CORS(app)

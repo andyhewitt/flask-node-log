@@ -29,6 +29,11 @@
                                     <span>{{ node.schedulable }}</span></a></p>
                         </div>
                         <div class="mb-0">
+                            <p class="h6">Dedicated: <a class="badge ps-0 text-decoration-none"
+                                    href="{{ url_for('nodes.nodes_by_schedulable', schedulable=node.schedulable)}}">
+                                    <span>{{ node.is_dedicated }}</span></a></p>
+                        </div>
+                        <div class="mb-0">
                             {% if node.reported == false %}
                             <p class="h6">Reported: <span><a class="badge text-decoration-none"
                                         href="{{ url_for('nodes.reported', node_id=node.id)}}"><i class="bi bi-flag"

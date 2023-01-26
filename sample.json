@@ -1,0 +1,367 @@
+{
+    "status": "success",
+    "data": {
+        "resultType": "vector",
+        "result": [
+            {
+                "metric": {
+                    "endpoint": "http-metrics",
+                    "instance": "100.86.100.42:8080",
+                    "job": "kube-state-metrics",
+                    "label_beta_kubernetes_io_arch": "amd64",
+                    "label_beta_kubernetes_io_os": "linux",
+                    "label_cluster_aps_cpd_rakuten_com_id": "jpe2-caas1-prod1",
+                    "label_cluster_aps_cpd_rakuten_com_noderole": "worker",
+                    "label_cluster_aps_cpd_rakuten_com_processor": "IntelR-XeonR-E-2278G-CPU--3.40GHz",
+                    "label_cluster_aps_cpd_rakuten_com_rackInfo": "jpe2-4-ca06",
+                    "label_dc_aps_cpd_rakuten_com_region": "jpe2",
+                    "label_deploy_aps_cpd_rakuten_com_nodebinding": "application",
+                    "label_kubernetes_io_arch": "amd64",
+                    "label_kubernetes_io_hostname": "jpe2-caas1-prod1-node-001377.caas.jpe2c.dcnw.rakuten",
+                    "label_kubernetes_io_os": "linux",
+                    "label_machine_type": "Physical",
+                    "label_network_aps_cpd_rakuten_com_env_layer": "prod1",
+                    "label_node_aps_cpd_rakuten_com_az": "jpe2c",
+                    "label_node_aps_cpd_rakuten_com_os": "container-linux",
+                    "label_node_kubernetes_io_kube_proxy_ds_ready": "true",
+                    "label_role": "defaultworker",
+                    "label_server_aps_cpd_rakuten_com_spec": "QuantaMicro_X11C-8N_Premium_SKU",
+                    "label_tier": "Application",
+                    "namespace": "kube-system",
+                    "node": "jpe2-caas1-prod1-node-001377.caas.jpe2c.dcnw.rakuten",
+                    "pod": "kube-state-metrics-2",
+                    "prometheus": "mon-aas-prod/jpe2-caas1-prod1-k8s-v2-2",
+                    "service": "kube-state-metrics"
+                },
+                "value": [
+                    1674723855.338,
+                    "1"
+                ]
+            },
+            {
+                "metric": {
+                    "endpoint": "http-metrics",
+                    "instance": "100.86.132.55:8080",
+                    "job": "kube-state-metrics",
+                    "label_beta_kubernetes_io_arch": "amd64",
+                    "label_beta_kubernetes_io_os": "linux",
+                    "label_cluster_aps_cpd_rakuten_com_id": "jpe1-caas1-dev1",
+                    "label_cluster_aps_cpd_rakuten_com_noderole": "worker",
+                    "label_cluster_aps_cpd_rakuten_com_processor": "IntelR-XeonR-E-2378G-CPU--2.80GHz",
+                    "label_dc_aps_cpd_rakuten_com_region": "jpe1",
+                    "label_deploy_aps_cpd_rakuten_com_nodebinding": "application",
+                    "label_kubernetes_io_arch": "amd64",
+                    "label_kubernetes_io_hostname": "jpe1-caas1-dev1-node-000201.caas.jpe1a.dcnw.rakuten",
+                    "label_kubernetes_io_os": "linux",
+                    "label_machine_type": "Physical",
+                    "label_network_aps_cpd_rakuten_com_env_layer": "dev1",
+                    "label_node_kubernetes_io_kube_proxy_ds_ready": "true",
+                    "label_role": "defaultworker",
+                    "label_server_aps_cpd_rakuten_com_spec": "MBI-310T-01-RI012",
+                    "label_tier": "Application",
+                    "namespace": "kube-system",
+                    "node": "jpe1-caas1-dev1-node-000201.caas.jpe1a.dcnw.rakuten",
+                    "pod": "kube-state-metrics-2",
+                    "prometheus": "mon-aas-prod/jpe1-caas1-dev1-k8s-v2",
+                    "service": "kube-state-metrics"
+                },
+                "value": [
+                    1674723855.338,
+                    "1"
+                ]
+            },
+            {
+                "metric": {
+                    "endpoint": "http-metrics",
+                    "instance": "100.86.2.97:8080",
+                    "job": "kube-state-metrics",
+                    "label_beta_kubernetes_io_arch": "amd64",
+                    "label_beta_kubernetes_io_os": "linux",
+                    "label_cluster_aps_cpd_rakuten_com_id": "jpe2-caas1-prod3",
+                    "label_cluster_aps_cpd_rakuten_com_noderole": "worker",
+                    "label_cluster_aps_cpd_rakuten_com_processor": "IntelR-XeonR-E-2378G-CPU--2.80GHz",
+                    "label_cluster_aps_cpd_rakuten_com_rackInfo": "jpe2-4-cf03",
+                    "label_dc_aps_cpd_rakuten_com_region": "jpe2",
+                    "label_deploy_aps_cpd_rakuten_com_nodebinding": "application",
+                    "label_kubernetes_io_arch": "amd64",
+                    "label_kubernetes_io_hostname": "jpe2-caas1-prod3-node-000167.caas.jpe2c.dcnw.rakuten",
+                    "label_kubernetes_io_os": "linux",
+                    "label_machine_type": "Physical",
+                    "label_network_aps_cpd_rakuten_com_env_layer": "prod3",
+                    "label_node_aps_cpd_rakuten_com_flavor": "c7-standard-dedicated",
+                    "label_node_aps_cpd_rakuten_com_os": "container-linux",
+                    "label_node_aps_cpd_rakuten_com_owner": "taxonomy-validator-api",
+                    "label_node_kubernetes_io_kube_proxy_ds_ready": "true",
+                    "label_role": "defaultworker",
+                    "label_server_aps_cpd_rakuten_com_spec": "SYS-530MT-H12TRF-RI012",
+                    "label_tier": "Application",
+                    "namespace": "kube-system",
+                    "node": "jpe2-caas1-prod3-node-000167.caas.jpe2c.dcnw.rakuten",
+                    "pod": "kube-state-metrics-2",
+                    "prometheus": "mon-aas-prod/jpe2-caas1-prod3-k8s-v2",
+                    "service": "kube-state-metrics"
+                },
+                "value": [
+                    1674723855.338,
+                    "1"
+                ]
+            },
+            {
+                "metric": {
+                    "endpoint": "http-metrics",
+                    "instance": "100.86.56.187:8080",
+                    "job": "kube-state-metrics",
+                    "label_beta_kubernetes_io_arch": "amd64",
+                    "label_beta_kubernetes_io_os": "linux",
+                    "label_cluster_aps_cpd_rakuten_com_id": "jpe2-caas1-idprod1",
+                    "label_cluster_aps_cpd_rakuten_com_noderole": "worker",
+                    "label_cluster_aps_cpd_rakuten_com_processor": "IntelR-XeonR-E-2378G-CPU--2.80GHz",
+                    "label_cluster_aps_cpd_rakuten_com_rackInfo": "jpe2-4-cp10",
+                    "label_dc_aps_cpd_rakuten_com_region": "jpe2",
+                    "label_deploy_aps_cpd_rakuten_com_nodebinding": "application",
+                    "label_kubernetes_io_arch": "amd64",
+                    "label_kubernetes_io_hostname": "jpe2-caas1-idprod1-node-3-x8t7n.caas.jpe2c.dcnw.rakuten",
+                    "label_kubernetes_io_os": "linux",
+                    "label_machine_type": "Physical",
+                    "label_network_aps_cpd_rakuten_com_env_layer": "idprod1",
+                    "label_node_aps_cpd_rakuten_com_flavor": "c7-standard-dedicated",
+                    "label_node_aps_cpd_rakuten_com_os": "container-linux",
+                    "label_node_aps_cpd_rakuten_com_owner": "mpd-uid-prod",
+                    "label_node_kubernetes_io_kube_proxy_ds_ready": "true",
+                    "label_role": "defaultworker",
+                    "label_server_aps_cpd_rakuten_com_spec": "MBI-310T-01-RI012",
+                    "label_tier": "Application",
+                    "namespace": "kube-system",
+                    "node": "jpe2-caas1-idprod1-node-3-x8t7n.caas.jpe2c.dcnw.rakuten",
+                    "pod": "kube-state-metrics-c798489cb-xlp97",
+                    "prometheus": "mon-aas-prod/jpe2-caas1-idprod1-k8s",
+                    "service": "kube-state-metrics"
+                },
+                "value": [
+                    1674723855.338,
+                    "1"
+                ]
+            },
+            {
+                "metric": {
+                    "endpoint": "http-metrics",
+                    "instance": "100.86.58.210:8080",
+                    "job": "kube-state-metrics",
+                    "label_beta_kubernetes_io_arch": "amd64",
+                    "label_beta_kubernetes_io_os": "linux",
+                    "label_cluster_aps_cpd_rakuten_com_id": "jpe2-caas1-prod1",
+                    "label_cluster_aps_cpd_rakuten_com_noderole": "worker",
+                    "label_cluster_aps_cpd_rakuten_com_processor": "IntelR-XeonR-E-2278G-CPU--3.40GHz",
+                    "label_cluster_aps_cpd_rakuten_com_rackInfo": "jpe2-4-dq01",
+                    "label_dc_aps_cpd_rakuten_com_region": "jpe2",
+                    "label_deploy_aps_cpd_rakuten_com_nodebinding": "application",
+                    "label_kubernetes_io_arch": "amd64",
+                    "label_kubernetes_io_hostname": "jpe2-caas1-prod1-node-000809.caas.jpe2b.dcnw.rakuten",
+                    "label_kubernetes_io_os": "linux",
+                    "label_machine_type": "Physical",
+                    "label_network_aps_cpd_rakuten_com_env_layer": "prod1",
+                    "label_node_aps_cpd_rakuten_com_flavor": "c6-standard-dedicated",
+                    "label_node_aps_cpd_rakuten_com_owner": "rcash-platform-prod",
+                    "label_node_kubernetes_io_kube_proxy_ds_ready": "true",
+                    "label_role": "defaultworker",
+                    "label_server_aps_cpd_rakuten_com_spec": "QuantaMicro_X11C-8N_Microserver_non-IO_SKU",
+                    "label_tier": "Application",
+                    "namespace": "kube-system",
+                    "node": "jpe2-caas1-prod1-node-000809.caas.jpe2b.dcnw.rakuten",
+                    "pod": "kube-state-metrics-0",
+                    "prometheus": "mon-aas-prod/jpe2-caas1-prod1-k8s-v2",
+                    "service": "kube-state-metrics"
+                },
+                "value": [
+                    1674723855.338,
+                    "1"
+                ]
+            },
+            {
+                "metric": {
+                    "endpoint": "http-metrics",
+                    "instance": "100.86.86.93:8080",
+                    "job": "kube-state-metrics",
+                    "label_beta_kubernetes_io_arch": "amd64",
+                    "label_beta_kubernetes_io_os": "linux",
+                    "label_cluster_aps_cpd_rakuten_com_id": "jpe2-caas1-prod3",
+                    "label_cluster_aps_cpd_rakuten_com_noderole": "master",
+                    "label_cluster_aps_cpd_rakuten_com_processor": "IntelR-XeonR-E-2378G-CPU--2.80GHz",
+                    "label_cluster_aps_cpd_rakuten_com_rackInfo": "jpe2-4-cf06",
+                    "label_dc_aps_cpd_rakuten_com_region": "jpe2",
+                    "label_kubernetes_io_arch": "amd64",
+                    "label_kubernetes_io_hostname": "jpe2-caas1-prod3-master-000002.caas.jpe2c.dcnw.rakuten",
+                    "label_kubernetes_io_os": "linux",
+                    "label_machine_type": "Physical",
+                    "label_network_aps_cpd_rakuten_com_env_layer": "prod3",
+                    "label_node_kubernetes_io_kube_proxy_ds_ready": "false",
+                    "label_role": "master",
+                    "label_server_aps_cpd_rakuten_com_spec": "SYS-530MT-H12TRF-RI012",
+                    "namespace": "kube-system",
+                    "node": "jpe2-caas1-prod3-master-000002.caas.jpe2c.dcnw.rakuten",
+                    "pod": "kube-state-metrics-0",
+                    "prometheus": "mon-aas-prod/jpe2-caas1-prod3-k8s-v2",
+                    "service": "kube-state-metrics"
+                },
+                "value": [
+                    1674723855.338,
+                    "1"
+                ]
+            },
+            {
+                "metric": {
+                    "endpoint": "http-metrics",
+                    "instance": "100.86.88.82:8080",
+                    "job": "kube-state-metrics",
+                    "label_beta_kubernetes_io_arch": "amd64",
+                    "label_beta_kubernetes_io_os": "linux",
+                    "label_cluster_aps_cpd_rakuten_com_id": "jpe1-caas1-dev1",
+                    "label_cluster_aps_cpd_rakuten_com_noderole": "worker",
+                    "label_cluster_aps_cpd_rakuten_com_processor": "IntelR-XeonR-E-2378G-CPU--2.80GHz",
+                    "label_dc_aps_cpd_rakuten_com_region": "jpe1",
+                    "label_deploy_aps_cpd_rakuten_com_nodebinding": "application",
+                    "label_kubernetes_io_arch": "amd64",
+                    "label_kubernetes_io_hostname": "jpe1-caas1-dev1-node-000200.caas.jpe1a.dcnw.rakuten",
+                    "label_kubernetes_io_os": "linux",
+                    "label_machine_type": "Physical",
+                    "label_network_aps_cpd_rakuten_com_env_layer": "dev1",
+                    "label_node_kubernetes_io_kube_proxy_ds_ready": "true",
+                    "label_role": "defaultworker",
+                    "label_server_aps_cpd_rakuten_com_spec": "MBI-310T-01-RI012",
+                    "label_tier": "Application",
+                    "namespace": "kube-system",
+                    "node": "jpe1-caas1-dev1-node-000200.caas.jpe1a.dcnw.rakuten",
+                    "pod": "kube-state-metrics-0",
+                    "prometheus": "mon-aas-prod/jpe1-caas1-dev1-k8s-v2",
+                    "service": "kube-state-metrics"
+                },
+                "value": [
+                    1674723855.338,
+                    "1"
+                ]
+            },
+            {
+                "metric": {
+                    "endpoint": "http-metrics",
+                    "instance": "100.86.96.169:8080",
+                    "job": "kube-state-metrics",
+                    "label_beta_kubernetes_io_arch": "amd64",
+                    "label_beta_kubernetes_io_os": "linux",
+                    "label_cluster_aps_cpd_rakuten_com_id": "jpe2-caas1-prod3",
+                    "label_cluster_aps_cpd_rakuten_com_noderole": "worker",
+                    "label_cluster_aps_cpd_rakuten_com_processor": "IntelR-XeonR-E-2278G-CPU--3.40GHz",
+                    "label_cluster_aps_cpd_rakuten_com_rackInfo": "jpe2-4-ck03",
+                    "label_dc_aps_cpd_rakuten_com_region": "jpe2",
+                    "label_deploy_aps_cpd_rakuten_com_nodebinding": "application",
+                    "label_kubernetes_io_arch": "amd64",
+                    "label_kubernetes_io_hostname": "jpe2-caas1-prod3-node-000044.caas.jpe2c.dcnw.rakuten",
+                    "label_kubernetes_io_os": "linux",
+                    "label_machine_type": "Physical",
+                    "label_network_aps_cpd_rakuten_com_env_layer": "prod3",
+                    "label_node_aps_cpd_rakuten_com_os": "container-linux",
+                    "label_node_kubernetes_io_kube_proxy_ds_ready": "true",
+                    "label_role": "defaultworker",
+                    "label_server_aps_cpd_rakuten_com_spec": "QuantaMicro_X11C-8N_Premium_SKU",
+                    "label_tier": "Application",
+                    "namespace": "kube-system",
+                    "node": "jpe2-caas1-prod3-node-000044.caas.jpe2c.dcnw.rakuten",
+                    "pod": "kube-state-metrics-3",
+                    "prometheus": "mon-aas-prod/jpe2-caas1-prod3-k8s-v2",
+                    "service": "kube-state-metrics"
+                },
+                "value": [
+                    1674723855.338,
+                    "1"
+                ]
+            },
+            {
+                "metric": {
+                    "instance": "localhost:8080",
+                    "job": "kube-state-metrics",
+                    "label_beta_kubernetes_io_arch": "amd64",
+                    "label_beta_kubernetes_io_os": "linux",
+                    "label_cluster_aps_cpd_rakuten_com_id": "jpe2-caas1-dev1",
+                    "label_cluster_aps_cpd_rakuten_com_noderole": "worker",
+                    "label_cluster_aps_cpd_rakuten_com_processor": "IntelR-XeonR-E-2378G-CPU--2.80GHz",
+                    "label_cluster_aps_cpd_rakuten_com_rack_info": "jpe2-4-cf06",
+                    "label_dc_aps_cpd_rakuten_com_region": "jpe2",
+                    "label_deploy_aps_cpd_rakuten_com_nodebinding": "application",
+                    "label_kubernetes_io_arch": "amd64",
+                    "label_kubernetes_io_hostname": "jpe2-caas1-dev1-node-001281.caas.jpe2c.dcnw.rakuten",
+                    "label_kubernetes_io_os": "linux",
+                    "label_machine_type": "Physical",
+                    "label_network_aps_cpd_rakuten_com_env_layer": "dev1",
+                    "label_node_aps_cpd_rakuten_com_os": "container-linux",
+                    "label_node_kubernetes_io_kube_proxy_ds_ready": "true",
+                    "label_role": "defaultworker",
+                    "label_server_aps_cpd_rakuten_com_spec": "SYS-530MT-H12TRF-RI012",
+                    "label_tier": "Application",
+                    "node": "jpe2-caas1-dev1-node-001281.caas.jpe2c.dcnw.rakuten",
+                    "prometheus": "mon-aas-prod/jpe2-caas1-dev1-k8s-v2-prom-kube-state-metrics-3"
+                },
+                "value": [
+                    1674723855.338,
+                    "1"
+                ]
+            },
+            {
+                "metric": {
+                    "instance": "localhost:8080",
+                    "job": "kube-state-metrics",
+                    "label_beta_kubernetes_io_arch": "amd64",
+                    "label_beta_kubernetes_io_os": "linux",
+                    "label_cluster_aps_cpd_rakuten_com_id": "jpe2-caas1-dev1",
+                    "label_cluster_aps_cpd_rakuten_com_noderole": "worker",
+                    "label_cluster_aps_cpd_rakuten_com_processor": "IntelR-XeonR-E-2378G-CPU--2.80GHz",
+                    "label_dc_aps_cpd_rakuten_com_region": "jpe2",
+                    "label_deploy_aps_cpd_rakuten_com_nodebinding": "application",
+                    "label_kubernetes_io_arch": "amd64",
+                    "label_kubernetes_io_hostname": "jpe2-caas1-dev1-node-001103.caas.jpe2c.dcnw.rakuten",
+                    "label_kubernetes_io_os": "linux",
+                    "label_machine_type": "Physical",
+                    "label_network_aps_cpd_rakuten_com_env_layer": "dev1",
+                    "label_node_aps_cpd_rakuten_com_flavor": "c7-standard-dedicated",
+                    "label_node_cpd_rakuten_dedicated": "shibuya",
+                    "label_node_kubernetes_io_kube_proxy_ds_ready": "true",
+                    "label_role": "defaultworker",
+                    "label_server_aps_cpd_rakuten_com_spec": "SYS-530MT-H12TRF-RI012",
+                    "label_tier": "Application",
+                    "node": "jpe2-caas1-dev1-node-001103.caas.jpe2c.dcnw.rakuten",
+                    "prometheus": "mon-aas-prod/jpe2-caas1-dev1-k8s-v2-prom-kube-state-metrics-3"
+                },
+                "value": [
+                    1674723855.338,
+                    "1"
+                ]
+            },
+            {
+                "metric": {
+                    "instance": "localhost:8080",
+                    "job": "kube-state-metrics",
+                    "label_beta_kubernetes_io_arch": "amd64",
+                    "label_beta_kubernetes_io_os": "linux",
+                    "label_cluster_aps_cpd_rakuten_com_id": "jpe2-caas1-dev1",
+                    "label_cluster_aps_cpd_rakuten_com_noderole": "worker",
+                    "label_cluster_aps_cpd_rakuten_com_processor": "IntelR-XeonR-E-2378G-CPU--2.80GHz",
+                    "label_dc_aps_cpd_rakuten_com_region": "jpe2",
+                    "label_deploy_aps_cpd_rakuten_com_nodebinding": "application",
+                    "label_kubernetes_io_arch": "amd64",
+                    "label_kubernetes_io_hostname": "jpe2-caas1-dev1-node-001315.caas.jpe2c.dcnw.rakuten",
+                    "label_kubernetes_io_os": "linux",
+                    "label_machine_type": "Physical",
+                    "label_network_aps_cpd_rakuten_com_env_layer": "dev1",
+                    "label_node_kubernetes_io_kube_proxy_ds_ready": "true",
+                    "label_role": "defaultworker",
+                    "label_server_aps_cpd_rakuten_com_spec": "MBI-310T-01-RI012",
+                    "label_tier": "Application",
+                    "node": "jpe2-caas1-dev1-node-001315.caas.jpe2c.dcnw.rakuten",
+                    "prometheus": "mon-aas-prod/jpe2-caas1-dev1-k8s-v2-prom-kube-state-metrics-3"
+                },
+                "value": [
+                    1674723855.338,
+                    "0"
+                ]
+            }
+        ]
+    }
+}

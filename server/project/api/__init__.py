@@ -9,7 +9,7 @@ class GetNodeStatus():
     def get_not_ready_list(self, env):
         params = (
             ('query',
-             'sum by (node, prometheus) (kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s.*",status="true"}==0) + on(node, prometheus) kube_node_spec_unschedulable'),
+             '(sum by (node, prometheus) (kube_node_status_condition{condition="Ready",prometheus=~".*[0-9]-k8s.*",status="true"}==0) + on(node, prometheus) kube_node_spec_unschedulable) * on(node) group_right() kube_node_labels'),
         )
         mon_aas_url = 'https://caas.mon-aas-api.r-local.net/prometheus/api/v1/query' if env == "prod" else 'https://caas.qa-mon-aas-api.r-local.net/prometheus/api/v1/query'
         response = requests.get(
@@ -47,6 +47,11 @@ class GetNodeStatus():
                 r'([a-z]{1,}[0-9]{1}-[a-z]{1,}[0-9]{1}-[a-z]{1,}[0-9])', new_node["metric"]["prometheus"]).group(1)
             scheduling_status = False if new_node["value"][1] == "1" else True
 
+            tenant = None
+            if "label_node_aps_cpd_rakuten_com_owner" in new_node["metric"]:
+                tenant = new_node["metric"]["label_node_aps_cpd_rakuten_com_owner"]
+            
+
             # Check if this node is in the database
             is_in_db = Node.query.filter_by(
                 node=new_entered_node, env=env).first()
@@ -75,6 +80,7 @@ class GetNodeStatus():
                     node=new_entered_node,
                     region=region,
                     env=env,
+                    tenant=tenant,
                     schedulable=scheduling_status,
                     prometheus=new_entered_node_prometheus,
                     summary="",

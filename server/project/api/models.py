@@ -17,6 +17,7 @@ class Node(db.Model):
     schedulable = db.Column(db.Boolean, nullable=False)
     region = db.Column(db.String(100), nullable=False)
     env = db.Column(db.String(20), nullable=False)
+    tenant = db.Column(db.String(100), nullable=True)
     summary = db.Column(db.Text)
     records = db.relationship('Record', backref="nodes", lazy=True)
 
@@ -26,6 +27,10 @@ class Node(db.Model):
     @property
     def count(self):
         return len(self.records)
+
+    @property
+    def is_dedicated(self):
+        return True if self.tenant is not None else False 
 
     @property
     def creation_time(self):
